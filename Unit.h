@@ -5,6 +5,8 @@
 #include "Command.h"
 #include "UnitCommand.h"
 
+#include <iostream>
+
 enum UnitType {
 	Worker,
 	Army
@@ -32,8 +34,23 @@ public:
 	}
 
 	//set unit position
-	void setPosition(int x, int y) {
+	bool setPosition(int x, int y) {
 		shape.setPosition(sf::Vector2f(x, y));
+		return true;
+	}
+
+	//select unit
+	bool select() {
+		selected = true;
+		shape.setFillColor(sf::Color::Red);
+		return true;
+	}
+
+	//deselect unit
+	bool deselect() {
+		selected = false;
+		shape.setFillColor(sf::Color::Green);
+		return true;
 	}
 
 };
