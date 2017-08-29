@@ -2,8 +2,6 @@
 
 #include <string>
 #include <vector>
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 #include "Command.h"
 #include "UnitCommand.h"
 
@@ -13,8 +11,10 @@ enum UnitType {
 };
 
 class Unit {
+public:
 	sf::CircleShape shape;
-	sf::FloatRect rect;
+	//TODO:  figure out rects
+	//sf::FloatRect rect;
 
 	std::string name;
 	UnitType type;
@@ -23,4 +23,17 @@ class Unit {
 
 	bool selected = false;
 	std::vector<Command> commandQueue;
+
+	//constructor
+	Unit(std::string name, UnitType type, int maxHealth, int circleSize) 
+		: name(name), type(type), maxHealth(maxHealth), currentHealth(maxHealth) {
+		shape.setRadius(circleSize);
+		shape.setFillColor(sf::Color::Green);
+	}
+
+	//set unit position
+	void setPosition(int x, int y) {
+		shape.setPosition(sf::Vector2f(x, y));
+	}
+
 };
