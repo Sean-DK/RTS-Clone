@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include <Windows.h>
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
+#include "Unit.h"
+#include "Resource.h"
 
 
 int main()
