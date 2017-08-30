@@ -8,6 +8,8 @@
 int main()
 {
 
+	/*
+
  	//Create unit
 	{
 		sf::RenderWindow window(sf::VideoMode(768, 640), "Window");
@@ -182,6 +184,8 @@ int main()
 	}
 	//End test block
 
+	*/
+
 	//Move a unit with a command
 	{
 		sf::RenderWindow window(sf::VideoMode(768, 640), "Window");
@@ -211,30 +215,59 @@ int main()
 				if (!(unitList[i].commandQueue.empty())) {
 					//if that command is a Move command
 					if (unitList[i].commandQueue[0].type == CommandType::Move) {
-						if (unitList[i].commandQueue[0].completed) {
+						if (unitList[i].move(unitList[i].commandQueue[0])) {
 							unitList[i].commandQueue.erase(unitList[i].commandQueue.begin());
 						}
-						//TODO: make this not sloppy af
-						//move x
-						if (unitList[i].shape.getPosition().x > unitList[i].commandQueue[0].endPoint.x) {
-							unitList[i].setPosition(unitList[i].shape.getPosition().x - unitList[i].speed, unitList[i].shape.getPosition().y);
+					}
+				}
+			}
+
+			window.clear();
+			window.draw(unitList[0].shape);
+			window.display();
+		}
+
+		if (unitList[0].commandQueue.empty()) std::cout << "7 PASS\n";
+		else std::cout << "7 FAIL\n";
+	}
+	//End test block
+
+	
+	/*
+
+	//Queue two move commands
+	{
+		sf::RenderWindow window(sf::VideoMode(768, 640), "Window");
+		window.setFramerateLimit(60);
+
+		std::vector<Unit> unitList;
+		Unit unitOne("Worker Unit", unitList.size(), UnitType::Worker, 50, 5, 32);
+		unitList.push_back(unitOne);
+
+		Command commandOne(CommandType::Move, Point(500, 500));
+		unitList[0].commandQueue.push_back(commandOne);
+		Command commandTwo(CommandType::Move, Point(30, 700));
+		unitList[0].commandQueue.push_back(commandTwo);
+
+		while (window.isOpen())
+		{
+			sf::Event event;
+			while (window.pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed) {
+					window.close();
+				}
+			}
+
+			//execute commands
+			for (int i = 0; i < unitList.size(); i++) {
+				//if there is a command in the queue
+				if (!(unitList[i].commandQueue.empty())) {
+					//if that command is a Move command
+					if (unitList[i].commandQueue[0].type == CommandType::Move) {
+						if (unitList[i].move(unitList[i].commandQueue[0])) {
+							unitList[i].commandQueue.erase(unitList[i].commandQueue.begin());
 						}
-						else if (unitList[i].shape.getPosition().x < unitList[i].commandQueue[0].endPoint.x) {
-							unitList[i].setPosition(unitList[i].shape.getPosition().x + unitList[i].speed, unitList[i].shape.getPosition().y);
-						}
-						//move y
-						if (unitList[i].shape.getPosition().y > unitList[i].commandQueue[0].endPoint.y) {
-							unitList[i].setPosition(unitList[i].shape.getPosition().x, unitList[i].shape.getPosition().y - unitList[i].speed);
-						}
-						else if (unitList[i].shape.getPosition().y < unitList[i].commandQueue[0].endPoint.y) {
-							unitList[i].setPosition(unitList[i].shape.getPosition().x, unitList[i].shape.getPosition().y + unitList[i].speed);
-						}
-						//complete
-						if (unitList[i].shape.getPosition().x == unitList[i].commandQueue[0].endPoint.x
-							&& unitList[i].shape.getPosition().y == unitList[i].commandQueue[0].endPoint.y) {
-							unitList[i].commandQueue[0].completed == true;
-						}
-						
 					}
 				}
 			}
@@ -291,6 +324,8 @@ int main()
 		}
 	}
 	//End test block
+
+	*/
 
 	return 0;
 }

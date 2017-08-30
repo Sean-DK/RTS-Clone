@@ -19,16 +19,19 @@ public:
 	//sf::FloatRect rect;
 
 	std::string name;
+	int id;
 	UnitType type;
 	int maxHealth;
 	int currentHealth;
+	int speed;
 
-	bool selected = false;
+	bool isSelected = false;
 	std::vector<Command> commandQueue;
 
 	//constructor
-	Unit(std::string name, UnitType type, int maxHealth, int circleSize) 
-		: name(name), type(type), maxHealth(maxHealth), currentHealth(maxHealth) {
+	Unit() {}
+	Unit(std::string name, int id, UnitType type, int maxHealth, int speed, int circleSize)
+		: name(name), id(id), type(type), maxHealth(maxHealth), currentHealth(maxHealth), speed(speed) {
 		shape.setRadius(circleSize);
 		shape.setFillColor(sf::Color::Green);
 	}
@@ -41,16 +44,60 @@ public:
 
 	//select unit
 	bool select() {
-		selected = true;
-		shape.setFillColor(sf::Color::Red);
-		return true;
+		if (isSelected) return false;
+		else {
+			isSelected = true;
+			shape.setFillColor(sf::Color::Red);
+			return true;
+		}
 	}
 
 	//deselect unit
 	bool deselect() {
-		selected = false;
-		shape.setFillColor(sf::Color::Green);
-		return true;
+		if (!isSelected) return false;
+		else {
+			isSelected = false;
+			shape.setFillColor(sf::Color::Green);
+			return true;
+		}
 	}
 
+	//move unit
+	bool move(Command command) {
+		if (command.completed) {
+			return true;
+		}
+		else {
+			//move x
+			if (shape.getPosition().x > command.endPoint.x) {
+				setPosition(shape.getPosition().x - speed, shape.getPosition().y);
+			}
+			else if (shape.getPosition().x < command.endPoint.x) {
+				setPosition(shape.getPosition().x + speed, shape.getPosition().y);
+			}
+			//move y
+			if (shape.getPosition().y > command.endPoint.y) {
+				setPosition(shape.getPosition().x, shape.getPosition().y - speed);
+			}
+			else if (shape.getPosition().y < command.endPoint.y) {
+				setPosition(shape.getPosition().x, shape.getPosition().y + speed);
+			}
+			//complete
+			if (shape.getPosition().x == command.endPoint.x
+				&& shape.getPosition().y == command.endPoint.y) { 
+				command.completed = true;
+			}
+			return false;
+		}
+	}
 };
+
+bool operator==(Unit a, Unit b) {
+	if (a.name == b.name
+		&& a.id == b.id
+		&& a.type == b.type
+		&& a.maxHealth == b.maxHealth
+		&& a.speed == b.speed)
+		return true;
+	else return false;
+}
