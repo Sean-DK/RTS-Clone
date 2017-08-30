@@ -3,5 +3,6 @@
 #include "StructureCommand.h"
 
 class Structure {
+public:
 
 };

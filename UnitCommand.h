@@ -4,5 +4,6 @@
 #include <SFML/Audio.hpp>
 
 class UnitCommand {
+public:
 
 };
