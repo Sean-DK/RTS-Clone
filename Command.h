@@ -1,10 +1,9 @@
 #pragma once
 
-#include "Unit.h"
-
 enum CommandType {
 	Move,
-	Attack
+	Attack,
+	Gather
 };
 
 class Point {
@@ -16,11 +15,17 @@ public:
 	Point(int x, int y)
 		: x(x), y(y) {}
 
+	Point* operator=(Point point) {
+		this->x = point.x;
+		this->y = point.y;
+		return this;
+	}
 };
 
 class Command {
 public:
 	CommandType type;
+	Point startPoint;
 	Point endPoint;
 	//Unit target;
 	bool completed = false;
@@ -30,5 +35,6 @@ public:
 		: type(type), endPoint(endPoint) {}
 	//Command(CommandType type, Unit target)
 		//: type(type), target(target) {}
+
 
 };

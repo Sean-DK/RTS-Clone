@@ -26,6 +26,7 @@ public:
 	int speed;
 
 	bool isSelected = false;
+	bool isGathering = false;
 	std::vector<Command> commandQueue;
 
 	//constructor
@@ -62,10 +63,10 @@ public:
 		}
 	}
 
-	//move unit
-	bool move(Command& command) {
+	//move command
+	void move(Command& command) {
 		if (command.completed) {
-			return true;
+			commandQueue.erase(commandQueue.begin());
 		}
 		else {
 			//move x
@@ -87,7 +88,48 @@ public:
 				&& shape.getPosition().y == command.endPoint.y) { 
 				command.completed = true;
 			}
-			return false;
+		}
+	}
+
+	//gather command
+	void gather(Command& command) {
+		if (command.completed) {
+			if (commandQueue.size() > 1) {
+				commandQueue.erase(commandQueue.begin());
+			}
+			else {
+				command.completed = false;
+			}
+		}
+		else {
+			//move x
+			if (shape.getPosition().x > command.endPoint.x) {
+				setPosition(shape.getPosition().x - speed, shape.getPosition().y);
+			}
+			else if (shape.getPosition().x < command.endPoint.x) {
+				setPosition(shape.getPosition().x + speed, shape.getPosition().y);
+			}
+			//move y
+			if (shape.getPosition().y > command.endPoint.y) {
+				setPosition(shape.getPosition().x, shape.getPosition().y - speed);
+			}
+			else if (shape.getPosition().y < command.endPoint.y) {
+				setPosition(shape.getPosition().x, shape.getPosition().y + speed);
+			}
+			if (shape.getPosition().x == command.endPoint.x
+				&& shape.getPosition().y == command.endPoint.y
+				&& !isGathering) {
+				command.startPoint = command.endPoint;
+				command.endPoint = Point(0, 0);
+				isGathering = true;
+				command.completed = true;
+			}
+			else if (shape.getPosition().x == command.endPoint.x
+				&& shape.getPosition().y == command.endPoint.y
+				&& isGathering) {
+				command.endPoint = command.startPoint;
+				isGathering = false;
+			}
 		}
 	}
 };
