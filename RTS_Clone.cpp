@@ -184,8 +184,6 @@ int main()
 	}
 	//End test block
 
-	*/
-
 	//Move a unit with a command
 	{
 		sf::RenderWindow window(sf::VideoMode(768, 640), "Window");
@@ -233,7 +231,7 @@ int main()
 	//End test block
 
 	
-	/*
+	*/
 
 	//Queue two move commands
 	{
@@ -246,7 +244,7 @@ int main()
 
 		Command commandOne(CommandType::Move, Point(500, 500));
 		unitList[0].commandQueue.push_back(commandOne);
-		Command commandTwo(CommandType::Move, Point(30, 700));
+		Command commandTwo(CommandType::Move, Point(700, 200));
 		unitList[0].commandQueue.push_back(commandTwo);
 
 		while (window.isOpen())
@@ -276,6 +274,10 @@ int main()
 			window.draw(unitList[0].shape);
 			window.display();
 		}
+
+
+		if (unitList[0].commandQueue.empty()) std::cout << "8 PASS\n";
+		else std::cout << "8 FAIL\n";
 	}
 	//End test block
 
@@ -324,9 +326,6 @@ int main()
 		}
 	}
 	//End test block
-
-	*/
 
 	return 0;
 }
-
