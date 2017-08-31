@@ -8,8 +8,6 @@
 int main()
 {
 
-	/*
-
  	//Create unit
 	{
 		sf::RenderWindow window(sf::VideoMode(768, 640), "Window");
@@ -213,9 +211,7 @@ int main()
 				if (!(unitList[i].commandQueue.empty())) {
 					//if that command is a Move command
 					if (unitList[i].commandQueue[0].type == CommandType::Move) {
-						if (unitList[i].move(unitList[i].commandQueue[0])) {
-							unitList[i].commandQueue.erase(unitList[i].commandQueue.begin());
-						}
+						unitList[i].move(unitList[i].commandQueue[0]);
 					}
 				}
 			}
@@ -230,9 +226,6 @@ int main()
 	}
 	//End test block
 
-	
-	*/
-
 	//Queue two move commands
 	{
 		sf::RenderWindow window(sf::VideoMode(768, 640), "Window");
@@ -242,7 +235,7 @@ int main()
 		Unit unitOne("Worker Unit", unitList.size(), UnitType::Worker, 50, 5, 32);
 		unitList.push_back(unitOne);
 
-		Command commandOne(CommandType::Move, Point(500, 500));
+		Command commandOne(CommandType::Move, Point(500, 250));
 		unitList[0].commandQueue.push_back(commandOne);
 		Command commandTwo(CommandType::Move, Point(700, 200));
 		unitList[0].commandQueue.push_back(commandTwo);
@@ -263,9 +256,7 @@ int main()
 				if (!(unitList[i].commandQueue.empty())) {
 					//if that command is a Move command
 					if (unitList[i].commandQueue[0].type == CommandType::Move) {
-						if (unitList[i].move(unitList[i].commandQueue[0])) {
-							unitList[i].commandQueue.erase(unitList[i].commandQueue.begin());
-						}
+						unitList[i].move(unitList[i].commandQueue[0]);
 					}
 				}
 			}
@@ -278,6 +269,94 @@ int main()
 
 		if (unitList[0].commandQueue.empty()) std::cout << "8 PASS\n";
 		else std::cout << "8 FAIL\n";
+	}
+	//End test block
+
+	//Gather command
+	{
+		sf::RenderWindow window(sf::VideoMode(768, 640), "Window");
+		window.setFramerateLimit(60);
+
+		std::vector<Unit> unitList;
+		Unit unitOne("Worker Unit", unitList.size(), UnitType::Worker, 50, 5, 32);
+		unitList.push_back(unitOne);
+
+		Command commandOne(CommandType::Gather, Point(500, 250));
+		unitList[0].commandQueue.push_back(commandOne);
+
+		while (window.isOpen())
+		{
+			sf::Event event;
+			while (window.pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed) {
+					window.close();
+				}
+			}
+
+			//execute commands
+			for (int i = 0; i < unitList.size(); i++) {
+				//if there is a command in the queue
+				if (!(unitList[i].commandQueue.empty())) {
+					//if that command is a Move command
+					if (unitList[i].commandQueue[0].type == CommandType::Move) {
+						unitList[i].move(unitList[i].commandQueue[0]);
+					}
+					else if (unitList[i].commandQueue[0].type == CommandType::Gather) {
+						unitList[i].gather(unitList[i].commandQueue[0]);
+					}
+				}
+			}
+
+			window.clear();
+			window.draw(unitList[0].shape);
+			window.display();
+		}
+	}
+	//End test block
+
+	//Gather command followed a move command
+	{
+		sf::RenderWindow window(sf::VideoMode(768, 640), "Window");
+		window.setFramerateLimit(60);
+
+		std::vector<Unit> unitList;
+		Unit unitOne("Worker Unit", unitList.size(), UnitType::Worker, 50, 5, 32);
+		unitList.push_back(unitOne);
+
+		Command commandOne(CommandType::Gather, Point(500, 250));
+		unitList[0].commandQueue.push_back(commandOne);
+		Command commandTwo(CommandType::Move, Point(700, 400));
+		unitList[0].commandQueue.push_back(commandTwo);
+
+		while (window.isOpen())
+		{
+			sf::Event event;
+			while (window.pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed) {
+					window.close();
+				}
+			}
+
+			//execute commands
+			for (int i = 0; i < unitList.size(); i++) {
+				//if there is a command in the queue
+				if (!(unitList[i].commandQueue.empty())) {
+					//if that command is a Move command
+					if (unitList[i].commandQueue[0].type == CommandType::Move) {
+						unitList[i].move(unitList[i].commandQueue[0]);
+					}
+					else if (unitList[i].commandQueue[0].type == CommandType::Gather) {
+						unitList[i].gather(unitList[i].commandQueue[0]);
+					}
+				}
+			}
+
+			window.clear();
+			window.draw(unitList[0].shape);
+			window.display();
+		}
 	}
 	//End test block
 
