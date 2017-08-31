@@ -63,7 +63,7 @@ public:
 	}
 
 	//move unit
-	bool move(Command command) {
+	bool move(Command& command) {
 		if (command.completed) {
 			return true;
 		}
