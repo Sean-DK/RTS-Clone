@@ -22,6 +22,7 @@ public:
 	}
 };
 
+//TODO: figure out attack commands
 class Command {
 public:
 	CommandType type;

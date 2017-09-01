@@ -63,6 +63,7 @@ public:
 		}
 	}
 
+	//TODO: fix pathing
 	//move command
 	void move(Command& command) {
 		if (command.completed) {
@@ -91,6 +92,7 @@ public:
 		}
 	}
 
+	//TODO: fix pathing
 	//gather command
 	void gather(Command& command) {
 		if (command.completed) {
