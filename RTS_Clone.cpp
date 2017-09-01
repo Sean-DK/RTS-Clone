@@ -361,7 +361,78 @@ int main()
 	////End test block
 
 	//Select unit with mouse click
+	//{
+	//	sf::RenderWindow window(sf::VideoMode(768, 640), "Window");
+	//	window.setFramerateLimit(60);
+
+	//	std::vector<Unit> unitList;
+	//	Unit unitOne("Worker Unit", unitList.size(), UnitType::Worker, 50, 1, 32);
+	//	unitList.push_back(unitOne);
+	//	Unit unitTwo("Worker Unit", unitList.size(), UnitType::Worker, 50, 1, 32);
+	//	unitList.push_back(unitTwo);
+	//	unitList[1].setPosition(100, 100);
+	//	Unit unitThree("Army Unit", unitList.size(), UnitType::Army, 50, 1, 48);
+	//	unitList.push_back(unitThree);
+	//	unitList[2].setPosition(300, 100);
+
+	//	while (window.isOpen())
+	//	{
+	//		sf::Event event;
+	//		while (window.pollEvent(event))
+	//		{
+	//			//////////////////////////////////////////
+	//			if (event.type == sf::Event::MouseButtonReleased) {
+	//				sf::Vector2f mousePosVector = sf::Vector2f(sf::Mouse::getPosition(window));
+	//				Point mousePosPoint(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
+	//				if (event.key.code == sf::Mouse::Left) {
+	//					for (int i = 0; i < unitList.size(); i++) {
+	//						if (unitList[i].shape.getGlobalBounds().contains(mousePosVector)) {
+	//							unitList[i].select();
+	//						}
+	//						else {
+	//							unitList[i].deselect();
+	//						}
+	//					}
+	//				}
+	//				else if (event.key.code == sf::Mouse::Right) {
+	//					for (int i = 0; i < unitList.size(); i++) {
+	//						if (unitList[i].isSelected) {
+	//							Command moveCommand(CommandType::Move, mousePosPoint);
+	//							unitList[i].commandQueue.push_back(moveCommand);
+	//						}
+	//					}
+	//				}
+	//			}
+	//			//////////////////////////////////////////
+	//			if (event.type == sf::Event::Closed) {
+	//				window.close();
+	//			}
+	//		}
+
+	//		//execute commands
+	//			for (int i = 0; i < unitList.size(); i++) {
+	//				//if there is a command in the queue
+	//				if (!(unitList[i].commandQueue.empty())) {
+	//					//if that command is a Move command
+	//					if (unitList[i].commandQueue[0].type == CommandType::Move) {
+	//						unitList[i].move(unitList[i].commandQueue[0]);
+	//					}
+	//				}
+	//			}
+
+	//		window.clear();
+	//		for (int i = 0; i < unitList.size(); i++) {
+	//			window.draw(unitList[i].shape);
+	//		}
+	//		window.display();
+	//	}
+	//}
+	////End test block
+
+	//Select multiple units with mouse click and shift
 	{
+		bool isShift = false;
+
 		sf::RenderWindow window(sf::VideoMode(768, 640), "Window");
 		window.setFramerateLimit(60);
 
@@ -387,10 +458,17 @@ int main()
 					if (event.key.code == sf::Mouse::Left) {
 						for (int i = 0; i < unitList.size(); i++) {
 							if (unitList[i].shape.getGlobalBounds().contains(mousePosVector)) {
-								unitList[i].select();
+								if (isShift && unitList[i].isSelected) {
+									unitList[i].deselect();
+								}
+								else {
+									unitList[i].select();
+								}
 							}
 							else {
-								unitList[i].deselect();
+								if (!isShift) {
+									unitList[i].deselect();
+								}
 							}
 						}
 					}
@@ -403,6 +481,16 @@ int main()
 						}
 					}
 				}
+				else if (event.type == sf::Event::KeyPressed) {
+					if (event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::RShift) {
+						isShift = true;
+					}
+				}
+				else if (event.type == sf::Event::KeyReleased) {
+					if (event.key.code == sf::Keyboard::LShift || event.key.code == sf::Keyboard::RShift) {
+						isShift = false;
+					}
+				}
 				//////////////////////////////////////////
 				if (event.type == sf::Event::Closed) {
 					window.close();
@@ -410,15 +498,15 @@ int main()
 			}
 
 			//execute commands
-				for (int i = 0; i < unitList.size(); i++) {
-					//if there is a command in the queue
-					if (!(unitList[i].commandQueue.empty())) {
-						//if that command is a Move command
-						if (unitList[i].commandQueue[0].type == CommandType::Move) {
-							unitList[i].move(unitList[i].commandQueue[0]);
-						}
+			for (int i = 0; i < unitList.size(); i++) {
+				//if there is a command in the queue
+				if (!(unitList[i].commandQueue.empty())) {
+					//if that command is a Move command
+					if (unitList[i].commandQueue[0].type == CommandType::Move) {
+						unitList[i].move(unitList[i].commandQueue[0]);
 					}
 				}
+			}
 
 			window.clear();
 			for (int i = 0; i < unitList.size(); i++) {
