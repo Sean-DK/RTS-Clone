@@ -542,3 +542,10 @@ int main()
 
 	return 0;
 }
+
+//TODO: CHANGE HOW COMMANDS ARE CREATED AND MANAGED.
+//Allow main() to pass sf::Events to the unit and manage commands in Unit.h
+//Use switches instead of Ifs
+
+//TODO: Try to find a way for the mouse to check if it's clicking a unit, rather than
+//having each unit check if it was clicked by the mouse
