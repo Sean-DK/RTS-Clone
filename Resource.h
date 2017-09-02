@@ -4,7 +4,7 @@
 #include <SFML/Audio.hpp>
 
 enum ResourceType {
-	Blue;
+	Blue,
 };
 
 class Resource {
