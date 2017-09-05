@@ -452,6 +452,60 @@ int main()
 			while (window.pollEvent(event))
 			{
 				//////////////////////////////////////////
+				if (event.type == sf::Event::MouseButtonPressed) {
+					//grab mouse position
+					Point mousePos(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
+				}
+				else if (event.type == sf::Event::MouseButtonReleased) {
+					//grab mouse position
+					Point mousePos(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
+					//switch based on which key was pressed
+					switch(event.key.code) {
+					//left mouse
+					case sf::Mouse::Left:
+						//check all units
+						//TODO: set up "loaded units" that only handles units on screen
+						for (int i = 0; i < unitList.size(); i++) {
+							//if the unit was clicked
+							if (unitList[i].shape.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+								//if shift is NOT held down
+								if (!isShift) {
+									//if the unit is NOT selected
+									if (!unitList[i].isSelected) {
+										unitList[i].select();
+									}
+									//if the unit is selected
+									else {
+										//do nothing
+									}
+								}
+								//if shift is held down
+								else {
+									//if the unit is NOT selected {
+									if (!unitList[i].isSelected) {
+										unitList[i].select();
+									}
+									//if the unit is selected
+									else {
+										unitList[i].deselect();
+									}
+								}
+							}
+							//if the unit was NOT clicked
+							else {
+								//if shift is NOT held
+								if (!isShift) {
+									unitList[i].deselect();
+								}
+							}
+						}
+						break;
+					case sf::Mouse::Right:
+						//TODO: right click stuff
+						break;
+					}
+				}
+				/*
 				if (event.type == sf::Event::MouseButtonReleased) {
 					sf::Vector2f mousePosVector = sf::Vector2f(sf::Mouse::getPosition(window));
 					Point mousePosPoint(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
@@ -491,6 +545,7 @@ int main()
 						isShift = false;
 					}
 				}
+				*/
 				//////////////////////////////////////////
 				if (event.type == sf::Event::Closed) {
 					window.close();
