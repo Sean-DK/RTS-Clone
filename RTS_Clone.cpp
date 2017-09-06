@@ -559,9 +559,10 @@ int main()
 										if (unitList[i].commandQueue.empty()) {
 											unitList[i].commandQueue.push_back(moveCommand);
 										}
-										//if there is a command, replace it
+										//if there is a command, clear queue and push new command
 										else {
-											unitList[i].commandQueue[0] = moveCommand;
+											unitList[i].commandQueue.clear();
+											unitList[i].commandQueue.push_back(moveCommand);
 										}
 									}
 								}
