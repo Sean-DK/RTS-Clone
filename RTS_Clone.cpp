@@ -503,11 +503,76 @@ int main()
 								if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
 									unitList[i].deselect();
 								}
+								//if shift is held
+								else {
+									//do nothing
+								}
 							}
 						}
 						break;
 					case sf::Mouse::Right:
-						//TODO: right click stuff
+						//check all units
+						//TODO: set up "loaded units" that only handles units on screen
+						for (int i = 0; i < unitList.size(); i++) {
+							//if the unit was clicked
+							//TODO: figure out attack commands
+							//if a unit is right clicked then use list of "selected units" and
+							//set the "target" to the clicked unit and pass the attack command
+							//to all units in the "selected units" list
+							if (unitList[i].shape.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+								//if shift is NOT held down
+								if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+									//if the unit is NOT selected
+									if (!unitList[i].isSelected) {
+										//do nothing
+									}
+									//if the unit is selected
+									else {
+										//do nothing
+									}
+								}
+								//if shift is held down
+								else {
+									//if the unit is NOT selected {
+									if (!unitList[i].isSelected) {
+										//do nothing
+									}
+									//if the unit is selected
+									else {
+										//do nothing
+									}
+								}
+							}
+							//if the unit was NOT clicked
+							else {
+								//if shift is NOT held
+								if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+									//if the unit is NOT selected
+									if (!unitList[i].isSelected) {
+										//do nothing
+									}
+									//if the unit is selected
+									else {
+										//replace current move command with new one
+										Command moveCommand(CommandType::Move, mousePos);
+										unitList[i].commandQueue[0] = moveCommand;
+									}
+								}
+								//if shift is held
+								else {
+									//if the unit is NOT selected
+									if (!unitList[i].isSelected) {
+										//do nothing
+									}
+									//if the unit is selected
+									else {
+										//add new move command to command queue
+										Command moveCommand(CommandType::Move, mousePos);
+										unitList[i].commandQueue.push_back(moveCommand);
+									}
+								}
+							}
+						}
 						break;
 					}
 				}
