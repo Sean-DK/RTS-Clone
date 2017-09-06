@@ -431,8 +431,6 @@ int main()
 
 	//Select multiple units with mouse click and shift
 	{
-		bool isShift = false;
-
 		sf::RenderWindow window(sf::VideoMode(768, 640), "Window");
 		window.setFramerateLimit(60);
 
@@ -455,6 +453,14 @@ int main()
 				if (event.type == sf::Event::MouseButtonPressed) {
 					//grab mouse position
 					Point mousePos(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
+					switch (event.key.code) {
+					case sf::Mouse::Left:
+						//left click stuff
+						break;
+					case sf::Mouse::Right:
+						//right click stuff
+						break;
+					}
 				}
 				else if (event.type == sf::Event::MouseButtonReleased) {
 					//grab mouse position
@@ -469,7 +475,7 @@ int main()
 							//if the unit was clicked
 							if (unitList[i].shape.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
 								//if shift is NOT held down
-								if (!isShift) {
+								if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
 									//if the unit is NOT selected
 									if (!unitList[i].isSelected) {
 										unitList[i].select();
@@ -494,7 +500,7 @@ int main()
 							//if the unit was NOT clicked
 							else {
 								//if shift is NOT held
-								if (!isShift) {
+								if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
 									unitList[i].deselect();
 								}
 							}
@@ -504,6 +510,12 @@ int main()
 						//TODO: right click stuff
 						break;
 					}
+				}
+				else if (event.type == sf::Event::KeyPressed) {
+					//key presses
+				}
+				else if (event.type == sf::Event::KeyReleased) {
+					//key releases
 				}
 				/*
 				if (event.type == sf::Event::MouseButtonReleased) {
