@@ -555,7 +555,14 @@ int main()
 									else {
 										//replace current move command with new one
 										Command moveCommand(CommandType::Move, mousePos);
-										unitList[i].commandQueue[0] = moveCommand;
+										//if there are no commands, push new command
+										if (unitList[i].commandQueue.empty()) {
+											unitList[i].commandQueue.push_back(moveCommand);
+										}
+										//if there is a command, replace it
+										else {
+											unitList[i].commandQueue[0] = moveCommand;
+										}
 									}
 								}
 								//if shift is held
