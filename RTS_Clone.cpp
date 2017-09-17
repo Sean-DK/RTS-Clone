@@ -431,8 +431,6 @@ int main()
 
 	//Select multiple units with mouse click and shift
 	{
-		bool isShift = false;
-
 		sf::RenderWindow window(sf::VideoMode(768, 640), "Window");
 		window.setFramerateLimit(60);
 
@@ -446,12 +444,197 @@ int main()
 		unitList.push_back(unitThree);
 		unitList[2].setPosition(300, 100);
 
+		std::vector<Resource> resourceList;
+		Resource resourceOne(500);
+		resourceOne.shape.setPosition(sf::Vector2f(300, 500));
+		resourceList.push_back(resourceOne);
+
 		while (window.isOpen())
 		{
 			sf::Event event;
 			while (window.pollEvent(event))
 			{
 				//////////////////////////////////////////
+				if (event.type == sf::Event::MouseButtonPressed) {
+					//grab mouse position
+					Point mousePos(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
+					switch (event.key.code) {
+					case sf::Mouse::Left:
+						//left click stuff
+						break;
+					case sf::Mouse::Right:
+						//right click stuff
+						break;
+					}
+				}
+				else if (event.type == sf::Event::MouseButtonReleased) {
+					//grab mouse position
+					Point mousePos(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
+					//switch based on which key was pressed
+					switch(event.key.code) {
+					//left mouse
+					case sf::Mouse::Left:
+						//check all units
+						//TODO: set up "loaded units" that only handles units on screen
+						for (int i = 0; i < unitList.size(); i++) {
+							//if the unit was clicked
+							if (unitList[i].shape.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+								//if shift is NOT held down
+								if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+									//if the unit is NOT selected
+									if (!unitList[i].isSelected) {
+										unitList[i].select();
+									}
+									//if the unit is selected
+									else {
+										//do nothing
+									}
+								}
+								//if shift is held down
+								else {
+									//if the unit is NOT selected {
+									if (!unitList[i].isSelected) {
+										unitList[i].select();
+									}
+									//if the unit is selected
+									else {
+										unitList[i].deselect();
+									}
+								}
+							}
+							//if the unit was NOT clicked
+							else {
+								//if shift is NOT held
+								if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+									unitList[i].deselect();
+								}
+								//if shift is held
+								else {
+									//do nothing
+								}
+							}
+						}
+						break;
+					case sf::Mouse::Right:
+						//check all units
+						//TODO: set up "loaded units" that only handles units on screen
+						for (int i = 0; i < unitList.size(); i++) {
+							//if the unit was clicked
+							//TODO: figure out attack commands
+							//if a unit is right clicked then use list of "selected units" and
+							//set the "target" to the clicked unit and pass the attack command
+							//to all units in the "selected units" list
+							if (unitList[i].shape.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+								//if shift is NOT held down
+								if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+									//if the unit is NOT selected
+									if (!unitList[i].isSelected) {
+										//do nothing
+									}
+									//if the unit is selected
+									else {
+										//do nothing
+									}
+								}
+								//if shift is held down
+								else {
+									//if the unit is NOT selected {
+									if (!unitList[i].isSelected) {
+										//do nothing
+									}
+									//if the unit is selected
+									else {
+										//do nothing
+									}
+								}
+							}
+							//if the unit was NOT clicked
+							else {
+								//check to see if a resource was clicked
+								for (int j = 0; j < resourceList.size(); j++) {
+									//if the node was clicked
+									if (resourceList[j].shape.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+										//check for selected units
+										for (int k = 0; k < unitList.size(); k++) {
+											//if the unit is NOT selected
+											if (!unitList[k].isSelected) {
+												//do nothing
+											}
+											//if the unit is selected
+											else {
+												//if shift is NOT held
+												if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+													//replace current command with new one
+													Command gatherCommand(CommandType::Gather, mousePos);
+													//if there are no commands, push new command
+													if (unitList[k].commandQueue.empty()) {
+														unitList[k].commandQueue.push_back(gatherCommand);
+													}
+													//if there is a command, clear queue and push new command
+													else {
+														unitList[k].commandQueue.clear();
+														unitList[k].commandQueue.push_back(gatherCommand);
+													}
+												}
+												//if shift is held
+												else {
+													//add new move command to command queue
+													Command gatherCommand(CommandType::Gather, mousePos);
+													unitList[k].commandQueue.push_back(gatherCommand);
+												}
+											}
+										}
+									}
+									//if the node was NOT clicked
+									else {
+										//if shift is NOT held
+										if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+											//if the unit is NOT selected
+											if (!unitList[i].isSelected) {
+												//do nothing
+											}
+											//if the unit is selected
+											else {
+												//replace current move command with new one
+												Command moveCommand(CommandType::Move, mousePos);
+												//if there are no commands, push new command
+												if (unitList[i].commandQueue.empty()) {
+													unitList[i].commandQueue.push_back(moveCommand);
+												}
+												//if there is a command, clear queue and push new command
+												else {
+													unitList[i].commandQueue.clear();
+													unitList[i].commandQueue.push_back(moveCommand);
+												}
+											}
+										}
+										//if shift is held
+										else {
+											//if the unit is NOT selected
+											if (!unitList[i].isSelected) {
+												//do nothing
+											}
+											//if the unit is selected
+											else {
+												//add new move command to command queue
+												Command moveCommand(CommandType::Move, mousePos);
+												unitList[i].commandQueue.push_back(moveCommand);
+											}
+										}
+									}
+								}
+							}
+						}
+						break;
+					}
+				}
+				else if (event.type == sf::Event::KeyPressed) {
+					//key presses
+				}
+				else if (event.type == sf::Event::KeyReleased) {
+					//key releases
+				}
+				/*
 				if (event.type == sf::Event::MouseButtonReleased) {
 					sf::Vector2f mousePosVector = sf::Vector2f(sf::Mouse::getPosition(window));
 					Point mousePosPoint(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
@@ -491,6 +674,7 @@ int main()
 						isShift = false;
 					}
 				}
+				*/
 				//////////////////////////////////////////
 				if (event.type == sf::Event::Closed) {
 					window.close();
@@ -500,17 +684,34 @@ int main()
 			//execute commands
 			for (int i = 0; i < unitList.size(); i++) {
 				//if there is a command in the queue
-				if (!(unitList[i].commandQueue.empty())) {
-					//if that command is a Move command
-					if (unitList[i].commandQueue[0].type == CommandType::Move) {
+				if (!unitList[i].commandQueue.empty()) {
+					switch (unitList[i].commandQueue[0].type) {
+					//move command
+					case CommandType::Move:
 						unitList[i].move(unitList[i].commandQueue[0]);
+						break;
+					//attack command
+					case CommandType::Attack:
+						//TODO: attack command
+						break;
+					//gather command
+					case CommandType::Gather:
+						unitList[i].gather(unitList[i].commandQueue[0]);
+						break;
 					}
 				}
 			}
 
 			window.clear();
+			//draw units
+			//TODO: only draw units that will be on screen
 			for (int i = 0; i < unitList.size(); i++) {
 				window.draw(unitList[i].shape);
+			}
+			//draw resources
+			//TODO: only draw resources that will be on screen
+			for (int i = 0; i < resourceList.size(); i++) {
+				window.draw(resourceList[i].shape);
 			}
 			window.display();
 		}
