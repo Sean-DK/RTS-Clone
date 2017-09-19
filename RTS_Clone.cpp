@@ -1,3 +1,6 @@
+//TODO: when holding shift during gather command (and not clicking anything, just holding shift
+//the units walk offscreen for some reason 
+
 #include "stdafx.h"
 #include "Unit.h"
 #include "Command.h"
@@ -444,6 +447,11 @@ int main()
 		unitList.push_back(unitThree);
 		unitList[2].setPosition(300, 100);
 
+		std::vector<Resource> resourceList;
+		Resource resourceOne(500);
+		resourceOne.shape.setPosition(sf::Vector2f(300, 500));
+		resourceList.push_back(resourceOne);
+
 		while (window.isOpen())
 		{
 			sf::Event event;
@@ -545,38 +553,77 @@ int main()
 							}
 							//if the unit was NOT clicked
 							else {
-								//if shift is NOT held
-								if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-									//if the unit is NOT selected
-									if (!unitList[i].isSelected) {
-										//do nothing
-									}
-									//if the unit is selected
-									else {
-										//replace current move command with new one
-										Command moveCommand(CommandType::Move, mousePos);
-										//if there are no commands, push new command
-										if (unitList[i].commandQueue.empty()) {
-											unitList[i].commandQueue.push_back(moveCommand);
+								//check to see if a resource was clicked
+								for (int j = 0; j < resourceList.size(); j++) {
+									//if the node was clicked
+									if (resourceList[j].shape.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+										//check for selected units
+										for (int k = 0; k < unitList.size(); k++) {
+											//if the unit is NOT selected
+											if (!unitList[k].isSelected) {
+												//do nothing
+											}
+											//if the unit is selected
+											else {
+												//if shift is NOT held
+												if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+													//replace current command with new one
+													Command gatherCommand(CommandType::Gather, mousePos);
+													//if there are no commands, push new command
+													if (unitList[k].commandQueue.empty()) {
+														unitList[k].commandQueue.push_back(gatherCommand);
+													}
+													//if there is a command, clear queue and push new command
+													else {
+														unitList[k].commandQueue.clear();
+														unitList[k].commandQueue.push_back(gatherCommand);
+													}
+												}
+												//if shift is held
+												else {
+													//add new move command to command queue
+													Command gatherCommand(CommandType::Gather, mousePos);
+													unitList[k].commandQueue.push_back(gatherCommand);
+												}
+											}
 										}
-										//if there is a command, clear queue and push new command
+									}
+									//if the node was NOT clicked
+									else {
+										//if shift is NOT held
+										if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+											//if the unit is NOT selected
+											if (!unitList[i].isSelected) {
+												//do nothing
+											}
+											//if the unit is selected
+											else {
+												//replace current move command with new one
+												Command moveCommand(CommandType::Move, mousePos);
+												//if there are no commands, push new command
+												if (unitList[i].commandQueue.empty()) {
+													unitList[i].commandQueue.push_back(moveCommand);
+												}
+												//if there is a command, clear queue and push new command
+												else {
+													unitList[i].commandQueue.clear();
+													unitList[i].commandQueue.push_back(moveCommand);
+												}
+											}
+										}
+										//if shift is held
 										else {
-											unitList[i].commandQueue.clear();
-											unitList[i].commandQueue.push_back(moveCommand);
+											//if the unit is NOT selected
+											if (!unitList[i].isSelected) {
+												//do nothing
+											}
+											//if the unit is selected
+											else {
+												//add new move command to command queue
+												Command moveCommand(CommandType::Move, mousePos);
+												unitList[i].commandQueue.push_back(moveCommand);
+											}
 										}
-									}
-								}
-								//if shift is held
-								else {
-									//if the unit is NOT selected
-									if (!unitList[i].isSelected) {
-										//do nothing
-									}
-									//if the unit is selected
-									else {
-										//add new move command to command queue
-										Command moveCommand(CommandType::Move, mousePos);
-										unitList[i].commandQueue.push_back(moveCommand);
 									}
 								}
 							}
@@ -640,17 +687,34 @@ int main()
 			//execute commands
 			for (int i = 0; i < unitList.size(); i++) {
 				//if there is a command in the queue
-				if (!(unitList[i].commandQueue.empty())) {
-					//if that command is a Move command
-					if (unitList[i].commandQueue[0].type == CommandType::Move) {
+				if (!unitList[i].commandQueue.empty()) {
+					switch (unitList[i].commandQueue[0].type) {
+					//move command
+					case CommandType::Move:
 						unitList[i].move(unitList[i].commandQueue[0]);
+						break;
+					//attack command
+					case CommandType::Attack:
+						//TODO: attack command
+						break;
+					//gather command
+					case CommandType::Gather:
+						unitList[i].gather(unitList[i].commandQueue[0]);
+						break;
 					}
 				}
 			}
 
 			window.clear();
+			//draw units
+			//TODO: only draw units that will be on screen
 			for (int i = 0; i < unitList.size(); i++) {
 				window.draw(unitList[i].shape);
+			}
+			//draw resources
+			//TODO: only draw resources that will be on screen
+			for (int i = 0; i < resourceList.size(); i++) {
+				window.draw(resourceList[i].shape);
 			}
 			window.display();
 		}

@@ -15,9 +15,6 @@ enum UnitType {
 class Unit {
 public:
 	sf::CircleShape shape;
-	//TODO:  figure out rects
-	//sf::FloatRect rect;
-
 	std::string name;
 	int id;
 	UnitType type;
