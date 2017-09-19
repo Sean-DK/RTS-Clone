@@ -438,14 +438,14 @@ int main()
 		window.setFramerateLimit(60);
 
 		std::vector<Unit> unitList;
-		Unit unitOne("Worker Unit", unitList.size(), UnitType::Worker, 50, 1, 32);
+		Unit unitOne(UnitName::SCV);
 		unitList.push_back(unitOne);
-		Unit unitTwo("Worker Unit", unitList.size(), UnitType::Worker, 50, 1, 32);
+		Unit unitTwo(UnitName::SCV);
 		unitList.push_back(unitTwo);
-		unitList[1].setPosition(100, 100);
-		Unit unitThree("Army Unit", unitList.size(), UnitType::Army, 50, 1, 48);
+		unitList[1].setPosition(Point(100, 100));
+		Unit unitThree(UnitName::Marine);
 		unitList.push_back(unitThree);
-		unitList[2].setPosition(300, 100);
+		unitList[2].setPosition(Point(300, 100));
 
 		std::vector<Resource> resourceList;
 		Resource resourceOne(500);
@@ -481,11 +481,11 @@ int main()
 						//TODO: set up "loaded units" that only handles units on screen
 						for (int i = 0; i < unitList.size(); i++) {
 							//if the unit was clicked
-							if (unitList[i].shape.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+							if (unitList[i].getShape()->getGlobalBounds().contains(mousePos.x, mousePos.y)) {
 								//if shift is NOT held down
 								if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
 									//if the unit is NOT selected
-									if (!unitList[i].isSelected) {
+									if (!unitList[i].isSelected()) {
 										unitList[i].select();
 									}
 									//if the unit is selected
@@ -496,7 +496,7 @@ int main()
 								//if shift is held down
 								else {
 									//if the unit is NOT selected {
-									if (!unitList[i].isSelected) {
+									if (!unitList[i].isSelected()) {
 										unitList[i].select();
 									}
 									//if the unit is selected
@@ -527,11 +527,11 @@ int main()
 							//if a unit is right clicked then use list of "selected units" and
 							//set the "target" to the clicked unit and pass the attack command
 							//to all units in the "selected units" list
-							if (unitList[i].shape.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+							if (unitList[i].getShape()->getGlobalBounds().contains(mousePos.x, mousePos.y)) {
 								//if shift is NOT held down
 								if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
 									//if the unit is NOT selected
-									if (!unitList[i].isSelected) {
+									if (!unitList[i].isSelected()) {
 										//do nothing
 									}
 									//if the unit is selected
@@ -542,7 +542,7 @@ int main()
 								//if shift is held down
 								else {
 									//if the unit is NOT selected {
-									if (!unitList[i].isSelected) {
+									if (!unitList[i].isSelected()) {
 										//do nothing
 									}
 									//if the unit is selected
@@ -560,7 +560,7 @@ int main()
 										//check for selected units
 										for (int k = 0; k < unitList.size(); k++) {
 											//if the unit is NOT selected
-											if (!unitList[k].isSelected) {
+											if (!unitList[k].isSelected()) {
 												//do nothing
 											}
 											//if the unit is selected
@@ -570,20 +570,19 @@ int main()
 													//replace current command with new one
 													Command gatherCommand(CommandType::Gather, mousePos);
 													//if there are no commands, push new command
-													if (unitList[k].commandQueue.empty()) {
-														unitList[k].commandQueue.push_back(gatherCommand);
+													if (unitList[k].commandEmpty()) {
+														unitList[k].addCommand(gatherCommand);
 													}
 													//if there is a command, clear queue and push new command
 													else {
-														unitList[k].commandQueue.clear();
-														unitList[k].commandQueue.push_back(gatherCommand);
+														unitList[k].setCommand(gatherCommand);
 													}
 												}
 												//if shift is held
 												else {
 													//add new move command to command queue
 													Command gatherCommand(CommandType::Gather, mousePos);
-													unitList[k].commandQueue.push_back(gatherCommand);
+													unitList[k].addCommand(gatherCommand);
 												}
 											}
 										}
@@ -593,7 +592,7 @@ int main()
 										//if shift is NOT held
 										if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
 											//if the unit is NOT selected
-											if (!unitList[i].isSelected) {
+											if (!unitList[i].isSelected()) {
 												//do nothing
 											}
 											//if the unit is selected
@@ -601,27 +600,26 @@ int main()
 												//replace current move command with new one
 												Command moveCommand(CommandType::Move, mousePos);
 												//if there are no commands, push new command
-												if (unitList[i].commandQueue.empty()) {
-													unitList[i].commandQueue.push_back(moveCommand);
+												if (unitList[i].commandEmpty()) {
+													unitList[i].addCommand(moveCommand);
 												}
 												//if there is a command, clear queue and push new command
 												else {
-													unitList[i].commandQueue.clear();
-													unitList[i].commandQueue.push_back(moveCommand);
+													unitList[i].setCommand(moveCommand);
 												}
 											}
 										}
 										//if shift is held
 										else {
 											//if the unit is NOT selected
-											if (!unitList[i].isSelected) {
+											if (!unitList[i].isSelected()) {
 												//do nothing
 											}
 											//if the unit is selected
 											else {
 												//add new move command to command queue
 												Command moveCommand(CommandType::Move, mousePos);
-												unitList[i].commandQueue.push_back(moveCommand);
+												unitList[i].addCommand(moveCommand);
 											}
 										}
 									}
@@ -685,13 +683,14 @@ int main()
 			}
 
 			//execute commands
+			//TODO: execute commands inside Unit
 			for (int i = 0; i < unitList.size(); i++) {
 				//if there is a command in the queue
-				if (!unitList[i].commandQueue.empty()) {
-					switch (unitList[i].commandQueue[0].type) {
+				if (!unitList[i].commandEmpty()) {
+					switch (unitList[i].getCommand(0)->type) {
 					//move command
 					case CommandType::Move:
-						unitList[i].move(unitList[i].commandQueue[0]);
+						//unitList[i].move(unitList[i].commandQueue[0]);
 						break;
 					//attack command
 					case CommandType::Attack:
@@ -699,7 +698,7 @@ int main()
 						break;
 					//gather command
 					case CommandType::Gather:
-						unitList[i].gather(unitList[i].commandQueue[0]);
+						//unitList[i].gather(unitList[i].commandQueue[0]);
 						break;
 					}
 				}
@@ -709,7 +708,7 @@ int main()
 			//draw units
 			//TODO: only draw units that will be on screen
 			for (int i = 0; i < unitList.size(); i++) {
-				window.draw(unitList[i].shape);
+				window.draw(*unitList[i].getShape());
 			}
 			//draw resources
 			//TODO: only draw resources that will be on screen
