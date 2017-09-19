@@ -12,9 +12,17 @@ public:
 	int maxAmount;
 	int currentAmount;
 	ResourceType type;
+	sf::CircleShape shape;
 
-	Resource()
-		: maxAmount(5000), currentAmount(5000), type(ResourceType::Blue) {}
-	Resource(int maxAmount, int currentAmount)
-		: maxAmount(maxAmount), currentAmount(currentAmount), type(ResourceType::Blue) {}
+	Resource() 
+		: maxAmount(500), currentAmount(500), type(ResourceType::Blue) {
+		shape.setRadius(24);
+		shape.setFillColor(sf::Color::Blue);
+	}
+
+	Resource(int maxAmount)
+		: maxAmount(maxAmount), currentAmount(maxAmount), type(ResourceType::Blue) {
+		shape.setRadius(24);
+		shape.setFillColor(sf::Color::Blue);
+	}
 };

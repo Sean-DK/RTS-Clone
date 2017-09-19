@@ -1,5 +1,5 @@
 //TODO: when holding shift during gather command (and not clicking anything, just holding shift
-//the units walk offscreen for some reason
+//the units walk offscreen for some reason 
 
 #include "stdafx.h"
 #include "Unit.h"
