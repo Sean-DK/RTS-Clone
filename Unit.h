@@ -106,6 +106,32 @@ public:
 	void addCommand(Command& c) {
 		commandQueue.push_back(c);
 	}
+
+	//Command engine
+	void executeCommand() {
+		if (!commandQueue.empty()) {
+			switch (commandQueue.front().type) {
+			case CommandType::Attack:
+				attack();
+				break;
+			case CommandType::Gather:
+				gather();
+				break;
+			case CommandType::Move:
+				move();
+				break;
+			}
+		}
+	}
+
+	//Attack command
+	void attack() {}
+
+	//Gather command
+	void gather() {}
+	
+	//Move command
+	void move() {}
 };
 
 //class Unit {

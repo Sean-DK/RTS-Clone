@@ -683,25 +683,8 @@ int main()
 			}
 
 			//execute commands
-			//TODO: execute commands inside Unit
 			for (int i = 0; i < unitList.size(); i++) {
-				//if there is a command in the queue
-				if (!unitList[i].commandEmpty()) {
-					switch (unitList[i].getCommand(0)->type) {
-					//move command
-					case CommandType::Move:
-						//unitList[i].move(unitList[i].commandQueue[0]);
-						break;
-					//attack command
-					case CommandType::Attack:
-						//TODO: attack command
-						break;
-					//gather command
-					case CommandType::Gather:
-						//unitList[i].gather(unitList[i].commandQueue[0]);
-						break;
-					}
-				}
+				unitList[i].executeCommand();
 			}
 
 			window.clear();
