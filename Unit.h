@@ -27,7 +27,7 @@ private:
 	int unitID;
 	int maxHealth;
 	int currentHealth;
-	int speed;
+	double speed;
 	bool selected = false;
 	bool gathering = false; //Workers ONLY
 	std::vector<Command> commandQueue;
@@ -42,25 +42,25 @@ public:
 			type = UnitType::Army;
 			maxHealth = 50;
 			currentHealth = 50;
-			speed = 2;
+			speed = 1;
 			break;
 		case UnitName::Medic:
 			type = UnitType::Army;
 			maxHealth = 50;
 			currentHealth = 50;
-			speed = 2;
+			speed = 1;
 			break;
 		case UnitName::Tank:
 			type = UnitType::Army;
 			maxHealth = 75;
 			currentHealth = 75;
-			speed = 1;
+			speed = 0.5;
 			break;
 		case UnitName::SCV:
 			type = UnitType::Worker;
 			maxHealth = 25;
 			currentHealth = 25;
-			speed = 2;
+			speed = 1;
 			shape.setSize(sf::Vector2f(32, 32));
 			break;
 		}
@@ -74,7 +74,7 @@ public:
 	const int getID() { return unitID; }
 	const int getMaxHealth() { return maxHealth; }
 	const int getCurrentHealth() { return currentHealth; }
-	const int getSpeed() { return speed; }
+	const double getSpeed() { return speed; }
 	const bool isSelected() { return selected; }
 	const bool isGathering() { return gathering; }
 	const Command* getCommand(int i) { return &commandQueue[i]; }
@@ -82,6 +82,7 @@ public:
 
 	//Setters
 	void setPosition(Point p) { shape.setPosition(p.x, p.y); }
+	void setPosition(float x, float y) { shape.setPosition(x, y); }
 	void setID(int i) { unitID = i; }
 	void setHealth(int h) { currentHealth = h; }
 	void select() {
@@ -128,10 +129,76 @@ public:
 	void attack() {}
 
 	//Gather command
-	void gather() {}
+	//fix pathing and timing
+	void gather() {
+		if (commandQueue.front().completed) {
+			if (commandQueue.size() > 1) {
+				commandQueue.erase(commandQueue.begin());
+			}
+			else {
+				commandQueue.front().completed = false;
+			}
+		}
+		else {
+			//move x
+			if (shape.getPosition().x > commandQueue.front().endPoint.x) {
+				setPosition(shape.getPosition().x - speed, shape.getPosition().y);
+			}
+			else if (shape.getPosition().x < commandQueue.front().endPoint.x) {
+				setPosition(shape.getPosition().x + speed, shape.getPosition().y);
+			}
+			//move y
+			if (shape.getPosition().y > commandQueue.front().endPoint.y) {
+				setPosition(shape.getPosition().x, shape.getPosition().y - speed);
+			}
+			else if (shape.getPosition().y < commandQueue.front().endPoint.y) {
+				setPosition(shape.getPosition().x, shape.getPosition().y + speed);
+			}
+			if (shape.getPosition().x == commandQueue.front().endPoint.x
+				&& shape.getPosition().y == commandQueue.front().endPoint.y
+				&& !gathering) {
+				commandQueue.front().startPoint = commandQueue.front().endPoint;
+				commandQueue.front().endPoint = Point(0, 0);
+				gathering = true;
+				commandQueue.front().completed = true;
+			}
+			else if (shape.getPosition().x == commandQueue.front().endPoint.x
+				&& shape.getPosition().y == commandQueue.front().endPoint.y
+				&& gathering) {
+				commandQueue.front().endPoint = commandQueue.front().startPoint;
+				gathering = false;
+			}
+		}
+	}
 	
 	//Move command
-	void move() {}
+	//TODO: fix pathing
+	void move() {
+		if (commandQueue.front().completed) {
+						commandQueue.erase(commandQueue.begin());
+					}
+		else {
+			//move x
+			if (shape.getPosition().x > commandQueue.front().endPoint.x) {
+				setPosition(shape.getPosition().x - speed, shape.getPosition().y);
+			}
+			else if (shape.getPosition().x < commandQueue.front().endPoint.x) {
+				setPosition(shape.getPosition().x + speed, shape.getPosition().y);
+			}
+			//move y
+			if (shape.getPosition().y > commandQueue.front().endPoint.y) {
+				setPosition(shape.getPosition().x, shape.getPosition().y - speed);
+			}
+			else if (shape.getPosition().y < commandQueue.front().endPoint.y) {
+				setPosition(shape.getPosition().x, shape.getPosition().y + speed);
+			}
+			//complete
+			if (shape.getPosition().x == commandQueue.front().endPoint.x
+				&& shape.getPosition().y == commandQueue.front().endPoint.y) {
+				commandQueue.front().completed = true;
+			}
+		}
+	}
 };
 
 //class Unit {
