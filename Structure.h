@@ -9,5 +9,7 @@ enum StructureType {
 
 class Structure {
 public:
-
-};
+	StructureType type;
+	std::vector<int> unitQueue;
+	sf::CircleShape shape;
+}
