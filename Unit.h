@@ -2,9 +2,13 @@
 
 #include <vector>
 #include "Command.h"
+#include "Controller.h"
 #include "UnitCommand.h"
 
 #include <iostream>
+
+//idk why this needs to be here but it doesn't work without it
+class Controller;
 
 enum UnitType {
 	Worker,
@@ -18,8 +22,10 @@ enum UnitName {
 	Tank,
 };
 
+//TODO: do inheritance for unit types
 class Unit {
 private:
+	Controller* controller; //Workers ONLY
 	sf::RectangleShape shape;
 	UnitType type;
 	UnitName name;
