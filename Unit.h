@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include <vector>
 #include "Command.h"
 #include "UnitCommand.h"
@@ -35,8 +34,8 @@ private:
 public:
 	//constructor
 	Unit() {}
-	Unit(UnitName n)
-		: name(n) {
+	Unit(UnitName n, int id)
+		: name(n), unitID(id) {
 		switch (this->name) {
 		case UnitName::Marine:
 			type = UnitType::Army;
@@ -81,9 +80,8 @@ public:
 	const bool commandEmpty() { return commandQueue.empty(); }
 
 	//Setters
-	void setPosition(Point p) { shape.setPosition(p.x, p.y); }
+	void setPosition(Point* p) { shape.setPosition(p->x, p->y); }
 	void setPosition(float x, float y) { shape.setPosition(x, y); }
-	void setID(int i) { unitID = i; }
 	void setHealth(int h) { currentHealth = h; }
 	void select() {
 		if (!selected) {
@@ -147,8 +145,8 @@ public:
 			//If the unit is NOT currently holding a resource (AKA gathering), move towards resource
 			//TODO: change variable name of "gathering"
 			if (!gathering) {
-				command->endPoint->x = command->target->shape.getPosition().x;
-				command->endPoint->y = command->target->shape.getPosition().y;
+				command->endPoint->x = command->target->getShape()->getPosition().x;
+				command->endPoint->y = command->target->getShape()->getPosition().y;
 			}
 			else {
 				command->endPoint->x = 0;

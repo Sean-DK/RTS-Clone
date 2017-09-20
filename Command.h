@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
+//idk why this needs to be here but it doesn't work without it
 class Unit;
 
 class Point {
