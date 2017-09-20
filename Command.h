@@ -1,20 +1,21 @@
 #pragma once
 
-enum CommandType {
-	Move,
-	Attack,
-	Gather
-};
+#include "Unit.h"
+#include "Resource.h"
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
+class Unit;
 
 class Point {
 public:
-	int x;
-	int y;
+	float x;
+	float y;
 
-	Point() {}
-	Point(int x, int y)
+	Point(float x, float y)
 		: x(x), y(y) {}
 
+	Point() {}
 	Point* operator=(Point point) {
 		this->x = point.x;
 		this->y = point.y;
@@ -22,20 +23,45 @@ public:
 	}
 };
 
-//TODO: figure out attack commands
+enum CommandType {
+	Move,
+	Attack,
+	Gather
+};
+
 class Command {
 public:
 	CommandType type;
-	Point startPoint;
-	Point endPoint;
-	//Unit target;
-	bool completed = false;
+	bool completed;
+	sf::RectangleShape shape;
 
-	Command() {}
-	Command(CommandType type, Point endPoint)
-		: type(type), endPoint(endPoint) {}
-	//Command(CommandType type, Unit target)
-		//: type(type), target(target) {}
+	Command(CommandType type)
+		: type(type), completed(false) {}
+};
 
+class AttackCommand : public Command {
+public:
+	Unit* target;
 
+	AttackCommand(Unit* u)
+		: Command(CommandType::Attack), target(u) {}
+};
+
+class GatherCommand : public Command {
+public:
+	Resource* target;
+	Point* endPoint;
+
+	GatherCommand(Resource* r)
+		: Command(CommandType::Gather), target(r) {
+		endPoint = new Point(0, 0);
+	}
+};
+
+class MoveCommand : public Command {
+public:
+	Point* endPoint;
+
+	MoveCommand(Point* p)
+		: Command(CommandType::Move), endPoint(p) {}
 };
