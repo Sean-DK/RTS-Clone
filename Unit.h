@@ -30,7 +30,7 @@ private:
 	double speed;
 	bool selected = false;
 	bool gathering = false; //Workers ONLY
-	std::vector<Command> commandQueue;
+	std::vector<Command*> commandQueue;
 
 public:
 	//constructor
@@ -77,7 +77,7 @@ public:
 	const double getSpeed() { return speed; }
 	const bool isSelected() { return selected; }
 	const bool isGathering() { return gathering; }
-	const Command* getCommand(int i) { return &commandQueue[i]; }
+	const Command* getCommand(int i) { return commandQueue[i]; }
 	const bool commandEmpty() { return commandQueue.empty(); }
 
 	//Setters
@@ -97,105 +97,116 @@ public:
 			shape.setFillColor(sf::Color::White);
 		}
 	}
-	void setCommand(Command& c) {
+	void setCommand(Command* c) {
 		if (commandQueue.empty()) { commandQueue.push_back(c); }
 		else {
 			commandQueue.clear();
 			commandQueue.push_back(c);
 		}
 	}
-	void addCommand(Command& c) {
+	void addCommand(Command* c) {
 		commandQueue.push_back(c);
 	}
 
 	//Command engine
 	void executeCommand() {
 		if (!commandQueue.empty()) {
-			switch (commandQueue.front().type) {
+			switch (commandQueue.front()->type) {
 			case CommandType::Attack:
-				attack();
+				attack(static_cast<AttackCommand*>(commandQueue.front()));
 				break;
 			case CommandType::Gather:
-				gather();
+				gather(static_cast<GatherCommand*>(commandQueue.front()));
 				break;
 			case CommandType::Move:
-				move();
+				move(static_cast<MoveCommand*>(commandQueue.front()));
 				break;
 			}
 		}
 	}
 
 	//Attack command
-	void attack() {}
+	void attack(AttackCommand* command) {}
 
 	//Gather command
-	//fix pathing and timing
-	void gather() {
-		if (commandQueue.front().completed) {
+	//TODO: fix pathing and timing
+	//TODO: when giving "Gather" command and holding shift the unit walks offscreen and is lost
+	void gather(GatherCommand* command) {
+		//Check for completion
+		if (commandQueue.front()->completed) {
+			//If there is a command waiting, stop gathering
 			if (commandQueue.size() > 1) {
 				commandQueue.erase(commandQueue.begin());
 			}
+			//Otherwise continue gathering
 			else {
-				commandQueue.front().completed = false;
+				commandQueue.front()->completed = false;
 			}
 		}
 		else {
-			//move x
-			if (shape.getPosition().x > commandQueue.front().endPoint.x) {
+			//If the unit is NOT currently holding a resource (AKA gathering), move towards resource
+			//TODO: change variable name of "gathering"
+			if (!gathering) {
+				command->endPoint->x = command->target->shape.getPosition().x;
+				command->endPoint->y = command->target->shape.getPosition().y;
+			}
+			else {
+				command->endPoint->x = 0;
+				command->endPoint->y = 0;
+			}
+			//Move x
+			if (shape.getPosition().x > command->endPoint->x) {
 				setPosition(shape.getPosition().x - speed, shape.getPosition().y);
 			}
-			else if (shape.getPosition().x < commandQueue.front().endPoint.x) {
+			else if (shape.getPosition().x < command->endPoint->x) {
 				setPosition(shape.getPosition().x + speed, shape.getPosition().y);
 			}
-			//move y
-			if (shape.getPosition().y > commandQueue.front().endPoint.y) {
+			//Move y
+			if (shape.getPosition().y > command->endPoint->y) {
 				setPosition(shape.getPosition().x, shape.getPosition().y - speed);
 			}
-			else if (shape.getPosition().y < commandQueue.front().endPoint.y) {
+			else if (shape.getPosition().y < command->endPoint->y) {
 				setPosition(shape.getPosition().x, shape.getPosition().y + speed);
 			}
-			if (shape.getPosition().x == commandQueue.front().endPoint.x
-				&& shape.getPosition().y == commandQueue.front().endPoint.y
-				&& !gathering) {
-				commandQueue.front().startPoint = commandQueue.front().endPoint;
-				commandQueue.front().endPoint = Point(0, 0);
-				gathering = true;
-				commandQueue.front().completed = true;
-			}
-			else if (shape.getPosition().x == commandQueue.front().endPoint.x
-				&& shape.getPosition().y == commandQueue.front().endPoint.y
-				&& gathering) {
-				commandQueue.front().endPoint = commandQueue.front().startPoint;
-				gathering = false;
+			if (shape.getPosition().x == command->endPoint->x
+				&& shape.getPosition().y == command->endPoint->y) {
+				if (!gathering) {
+					gathering = true;
+					commandQueue.front()->completed = true;
+				}
+				else {
+					gathering = false;
+					commandQueue.front()->completed = true;
+				}
 			}
 		}
 	}
 	
 	//Move command
 	//TODO: fix pathing
-	void move() {
-		if (commandQueue.front().completed) {
-						commandQueue.erase(commandQueue.begin());
-					}
+	void move(MoveCommand* command) {
+		if (commandQueue.front()->completed) {
+			commandQueue.erase(commandQueue.begin());
+		}
 		else {
 			//move x
-			if (shape.getPosition().x > commandQueue.front().endPoint.x) {
+			if (shape.getPosition().x > command->endPoint->x) {
 				setPosition(shape.getPosition().x - speed, shape.getPosition().y);
 			}
-			else if (shape.getPosition().x < commandQueue.front().endPoint.x) {
+			else if (shape.getPosition().x < command->endPoint->x) {
 				setPosition(shape.getPosition().x + speed, shape.getPosition().y);
 			}
 			//move y
-			if (shape.getPosition().y > commandQueue.front().endPoint.y) {
+			if (shape.getPosition().y > command->endPoint->y) {
 				setPosition(shape.getPosition().x, shape.getPosition().y - speed);
 			}
-			else if (shape.getPosition().y < commandQueue.front().endPoint.y) {
+			else if (shape.getPosition().y < command->endPoint->y) {
 				setPosition(shape.getPosition().x, shape.getPosition().y + speed);
 			}
 			//complete
-			if (shape.getPosition().x == commandQueue.front().endPoint.x
-				&& shape.getPosition().y == commandQueue.front().endPoint.y) {
-				commandQueue.front().completed = true;
+			if (shape.getPosition().x == command->endPoint->x
+				&& shape.getPosition().y == command->endPoint->y) {
+				commandQueue.front()->completed = true;
 			}
 		}
 	}
