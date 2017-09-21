@@ -11,6 +11,7 @@ private:
 	std::vector<Unit*> units;
 	std::vector<Resource*> resources;
 	std::vector<Structure*> structures;
+	sf::RectangleShape* box = new sf::RectangleShape(sf::Vector2f(50, 50));
 	int currentID = 0;
 
 public:
@@ -34,6 +35,7 @@ public:
 		for (int i = 0; i < resources.size(); w->draw(*resources[i++]->getShape()));
 		for (int i = 0; i < structures.size(); w->draw(*structures[i++]->getShape()));
 		for (int i = 0; i < units.size(); w->draw(*units[i++]->getShape()));
+		w->draw(*box);
 		w->display();
 	}
 
@@ -209,43 +211,60 @@ public:
 		}
 	}
 
-	void KeyPress(sf::Keyboard::Key k) {}
+	void mouseDrag(Point* mousePos, sf::Event e) {
+		Point* currentPos = new Point(e.mouseMove.x - mousePos->x, e.mouseMove.y - mousePos->y);
+		std::cout << mousePos->x << ", " << mousePos->y << "\n";
+		box->setSize(sf::Vector2f(currentPos->x, currentPos->y));
+		box->setPosition(mousePos->x, mousePos->y);
+		box->setOutlineColor(sf::Color::Green);
+		box->setOutlineThickness(2);
+		box->setFillColor(sf::Color::Transparent);
+	}
 
-	void KeyRelease(sf::Keyboard::Key k) {}
+	void keyPress(sf::Keyboard::Key k) {}
+
+	void keyRelease(sf::Keyboard::Key k) {}
 
 	//Event Handler
 	void eventHandler(sf::Event e, sf::RenderWindow* w) {
+		static Point mousePos(0, 0);
 		if (e.type == sf::Event::MouseButtonPressed) {
 			//grab mouse position
-			Point* mousePos = new Point(sf::Mouse::getPosition(*w).x, sf::Mouse::getPosition(*w).y);
+			mousePos.x = sf::Mouse::getPosition(*w).x;
+			mousePos.y = sf::Mouse::getPosition(*w).y;
 			//switch based on which key was pressed
 			switch (e.key.code) {
 			case sf::Mouse::Left:
-				LeftMousePress(mousePos);
+				LeftMousePress(&mousePos);
 				break;
 			case sf::Mouse::Right:
-				RightMousePress(mousePos);
+				RightMousePress(&mousePos);
 				break;
 			}
 		}
 		else if (e.type == sf::Event::MouseButtonReleased) {
 			//grab mouse position
-			Point* mousePos = new Point(sf::Mouse::getPosition(*w).x, sf::Mouse::getPosition(*w).y);
+			mousePos.x = sf::Mouse::getPosition(*w).x;
+			mousePos.y = sf::Mouse::getPosition(*w).y;
 			//switch based on which key was pressed
 			switch (e.key.code) {
 			case sf::Mouse::Left:
-				LeftMouseRelease(mousePos);
+				LeftMouseRelease(&mousePos);
 				break;
 			case sf::Mouse::Right:
-				RightMouseRelease(mousePos);
+				RightMouseRelease(&mousePos);
 				break;
 			}
 		}
+		//Mouse is dragged while holding left button
+		else if (e.type == sf::Event::MouseMoved && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			mouseDrag(&mousePos, e);
+		}
 		else if (e.type == sf::Event::KeyPressed) {
-			KeyPress(e.key.code);
+			keyPress(e.key.code);
 		}
 		else if (e.type == sf::Event::KeyReleased) {
-			KeyRelease(e.key.code);
+			keyRelease(e.key.code);
 		}
 		if (e.type == sf::Event::Closed) {
 			w->close();
