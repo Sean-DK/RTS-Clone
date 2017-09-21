@@ -1,6 +1,8 @@
 //TODO: move pretty much all functionality into the controller
 //e.g. unit selection and deselection, etc.
 
+//TODO: deal with memory leaks, there's a lot
+
 #pragma once
 
 #include <vector>
@@ -65,11 +67,19 @@ public:
 		//if there is a box
 		if (box->getSize() != sf::Vector2f(0, 0)) {
 			//check all units
-			//TODO: set up "loaded units that only handles units on screen"
+			//TODO: set up "loaded units" that only handles units on screen
 			for (int i = 0; i < units.size(); i++) {
 				//if a unit is in the box
 				if (box->getGlobalBounds().intersects(units[i]->getShape()->getGlobalBounds())) {
 					units[i]->select();
+				}
+				//if a unit is NOT in a box and shift is held
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+					//do nothing
+				}
+				//if a unit is NOT in a box and shift is NOT held
+				else {
+					units[i]->deselect();
 				}
 			}
 			//delete the box
