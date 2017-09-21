@@ -11,7 +11,7 @@ private:
 	std::vector<Unit*> units;
 	std::vector<Resource*> resources;
 	std::vector<Structure*> structures;
-	sf::RectangleShape* box = new sf::RectangleShape(sf::Vector2f(50, 50));
+	sf::RectangleShape* box = new sf::RectangleShape(sf::Vector2f(0, 0));
 	int currentID = 0;
 
 public:
@@ -59,43 +59,59 @@ public:
 	void LeftMousePress(Point* mousePos) {}
 	void RightMousePress(Point* mousePos) {}
 	void LeftMouseRelease(Point* mousePos) {
-		//check all units
-		//TODO: set up "loaded units" that only handles units on screen
-		for (int i = 0; i < units.size(); i++) {
-			//if the unit was clicked
-			if (units[i]->getShape()->getGlobalBounds().contains(mousePos->x, mousePos->y)) {
-				//if shift is NOT held down
-				if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-					//if the unit is NOT selected
-					if (!units[i]->isSelected()) {
-						units[i]->select();
+		//if there is a box
+		if (box->getSize() != sf::Vector2f(0, 0)) {
+			//check all units
+			//TODO: set up "loaded units that only handles units on screen"
+			for (int i = 0; i < units.size(); i++) {
+				//if a unit is in the box
+				if (box->getGlobalBounds().intersects(units[i]->getShape()->getGlobalBounds())) {
+					units[i]->select();
+				}
+			}
+			//delete the box
+			box->setSize(sf::Vector2f(0, 0));
+		}
+		//if there is NOT a box
+		else {
+			//check all units
+			//TODO: set up "loaded units" that only handles units on screen
+			for (int i = 0; i < units.size(); i++) {
+				//if the unit was clicked
+				if (units[i]->getShape()->getGlobalBounds().contains(mousePos->x, mousePos->y)) {
+					//if shift is NOT held down
+					if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+						//if the unit is NOT selected
+						if (!units[i]->isSelected()) {
+							units[i]->select();
+						}
+						//if the unit is selected
+						else {
+							//do nothing
+						}
 					}
-					//if the unit is selected
+					//if shift is held down
+					else {
+						//if the unit is NOT selected {
+						if (!units[i]->isSelected()) {
+							units[i]->select();
+						}
+						//if the unit is selected
+						else {
+							units[i]->deselect();
+						}
+					}
+				}
+				//if the unit was NOT clicked
+				else {
+					//if shift is NOT held
+					if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+						units[i]->deselect();
+					}
+					//if shift is held
 					else {
 						//do nothing
 					}
-				}
-				//if shift is held down
-				else {
-					//if the unit is NOT selected {
-					if (!units[i]->isSelected()) {
-						units[i]->select();
-					}
-					//if the unit is selected
-					else {
-						units[i]->deselect();
-					}
-				}
-			}
-			//if the unit was NOT clicked
-			else {
-				//if shift is NOT held
-				if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-					units[i]->deselect();
-				}
-				//if shift is held
-				else {
-					//do nothing
 				}
 			}
 		}
@@ -213,7 +229,6 @@ public:
 
 	void mouseDrag(Point* mousePos, sf::Event e) {
 		Point* currentPos = new Point(e.mouseMove.x - mousePos->x, e.mouseMove.y - mousePos->y);
-		std::cout << mousePos->x << ", " << mousePos->y << "\n";
 		box->setSize(sf::Vector2f(currentPos->x, currentPos->y));
 		box->setPosition(mousePos->x, mousePos->y);
 		box->setOutlineColor(sf::Color::Green);
@@ -274,6 +289,7 @@ public:
 	//Initialize
 	void initialize() {
 		createUnit(UnitName::SCV);
+		units[0]->setPosition(400, 50);
 		createUnit(UnitName::SCV);
 		units[1]->setPosition(100, 100);
 		createUnit(UnitName::Marine);
