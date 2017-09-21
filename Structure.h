@@ -19,5 +19,5 @@ private:
 	Controller* controller;
 
 public:
-
+	const sf::CircleShape* getShape() { return &shape; }
 };
