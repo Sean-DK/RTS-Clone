@@ -29,10 +29,10 @@ int main()
 				Point* mousePos = new Point(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
 				switch (event.key.code) {
 				case sf::Mouse::Left:
-					//left click stuff
+					controller->LeftMousePress(mousePos);
 					break;
 				case sf::Mouse::Right:
-					//right click stuff
+					controller->RightMousePress(mousePos);
 					break;
 				}
 			}
@@ -195,18 +195,18 @@ int main()
 				}
 			}
 			else if (event.type == sf::Event::KeyPressed) {
-				//key presses
+				controller->KeyPress(event.key.code);
 			}
 			else if (event.type == sf::Event::KeyReleased) {
-				//key releases
+				controller->KeyRelease(event.key.code);
 			}
-			//////////////////////////////////////
 			if (event.type == sf::Event::Closed) {
 				window.close();
 			}
 		}
 
 		//execute commands
+		//TODO: add structure command execution
 		for (int i = 0; i < controller->units.size(); i++) {
 			controller->units[i]->executeCommand();
 		}
