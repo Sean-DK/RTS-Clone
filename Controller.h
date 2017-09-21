@@ -1,3 +1,6 @@
+//TODO: move pretty much all functionality into the controller
+//e.g. unit selection and deselection, etc.
+
 #pragma once
 
 #include <vector>
