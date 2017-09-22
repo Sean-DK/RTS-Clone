@@ -71,7 +71,21 @@ public:
 			for (int i = 0; i < units.size(); i++) {
 				//if a unit is in the box
 				if (box->getGlobalBounds().intersects(units[i]->getShape()->getGlobalBounds())) {
-					units[i]->select();
+					//if shift is NOT held
+					if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+						units[i]->select();
+					}
+					//if shift is held
+					else {
+						//if the unit is selected
+						if (units[i]->isSelected()) {
+							units[i]->deselect();
+						}
+						//if the unit is NOT selected
+						else {
+							units[i]->select();
+						}
+					}
 				}
 				//if a unit is NOT in a box and shift is held
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
@@ -254,6 +268,7 @@ public:
 	void keyRelease(sf::Keyboard::Key k) {}
 
 	//Event Handler
+	//TODO: use switch here
 	void eventHandler(sf::Event e, sf::RenderWindow* w) {
 		static Point mousePos(0, 0);
 		if (e.type == sf::Event::MouseButtonPressed) {
