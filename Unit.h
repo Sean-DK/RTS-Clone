@@ -9,7 +9,6 @@
 
 //idk why this needs to be here but it doesn't work without it
 class Controller;
-
 enum UnitType {
 	Worker,
 	Army

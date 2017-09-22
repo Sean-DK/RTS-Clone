@@ -16,6 +16,7 @@ private:
 	std::vector<Unit*> units;
 	std::vector<Resource*> resources;
 	std::vector<Structure*> structures;
+	std::vector<Unit*> controlGroups[10];
 	sf::RectangleShape* box = new sf::RectangleShape(sf::Vector2f(0, 0));
 	int currentID = 0;
 
@@ -59,6 +60,39 @@ public:
 	//Create Structure
 	//TODO: finish structure
 	void createStructure() {}
+	
+	//Add Control Group
+	void manageControlGroup(int n) {
+		//if shift is NOT held
+		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+			//if the control group is NOT empty
+			if (!controlGroups[n].empty()) {
+				//deselect all units
+				for (int i = 0; i < units.size(); i++) {
+					units[i]->deselect();
+				}
+				//select units in control group n
+				for (int i = 0; i < controlGroups[n].size(); i++) {
+					controlGroups[n][i]->select();
+				}
+			}
+			//if the control group is empty
+			else {
+				//do nothing
+			}
+		}
+		//if shift is held
+		else {
+			//clear control group n
+			controlGroups[n].clear();
+			//push selected units into control group n
+			for (int i = 0; i < units.size(); i++) {
+				if (units[i]->isSelected()) {
+					controlGroups[n].push_back(units[i]);
+				}
+			}
+		}
+	}
 
 	//Input Event Handling
 	void LeftMousePress(Point* mousePos) {}
@@ -263,7 +297,40 @@ public:
 		box->setFillColor(sf::Color::Transparent);
 	}
 
-	void keyPress(sf::Keyboard::Key k) {}
+	void keyPress(sf::Keyboard::Key k) {
+		switch (k) {
+		case (sf::Keyboard::Num1):
+			manageControlGroup(1);
+			break;
+		case (sf::Keyboard::Num2):
+			manageControlGroup(2);
+			break;
+		case (sf::Keyboard::Num3):
+			manageControlGroup(3);
+			break;
+		case (sf::Keyboard::Num4):
+			manageControlGroup(4);
+			break;
+		case (sf::Keyboard::Num5):
+			manageControlGroup(5);
+			break;
+		case (sf::Keyboard::Num6):
+			manageControlGroup(6);
+			break;
+		case (sf::Keyboard::Num7):
+			manageControlGroup(7);
+			break;
+		case (sf::Keyboard::Num8):
+			manageControlGroup(8);
+			break;
+		case (sf::Keyboard::Num9):
+			manageControlGroup(9);
+			break;
+		case (sf::Keyboard::Num0):
+			manageControlGroup(0);
+			break;
+		}
+	}
 
 	void keyRelease(sf::Keyboard::Key k) {}
 

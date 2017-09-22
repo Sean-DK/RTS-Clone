@@ -9,6 +9,7 @@ class Controller;
 enum StructureType {
 	Base,
 	Barracks,
+	Factory
 };
 
 class Structure {
