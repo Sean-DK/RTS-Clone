@@ -384,11 +384,37 @@ public:
 	//Initialize
 	void initialize() {
 		createUnit(UnitName::SCV);
-		units[0]->setPosition(400, 50);
 		createUnit(UnitName::SCV);
-		units[1]->setPosition(100, 100);
-		createUnit(UnitName::Marine);
-		units[2]->setPosition(300, 100);
+		createUnit(UnitName::SCV);
+		createUnit(UnitName::SCV);
+		units[0]->setPosition(50, 50);
+		units[1]->setPosition(100, 50);
+		units[2]->setPosition(50, 100);
+		units[3]->setPosition(100, 100);
+		createUnit(UnitName::SCV);
+		createUnit(UnitName::SCV);
+		createUnit(UnitName::SCV);
+		createUnit(UnitName::SCV);
+		units[4]->setPosition(200, 100);
+		units[5]->setPosition(250, 100);
+		units[6]->setPosition(200, 150);
+		units[7]->setPosition(250, 150);
+		createUnit(UnitName::SCV);
+		createUnit(UnitName::SCV);
+		createUnit(UnitName::SCV);
+		createUnit(UnitName::SCV);
+		units[8]->setPosition(500, 300);
+		units[9]->setPosition(550, 300);
+		units[10]->setPosition(500, 350);
+		units[11]->setPosition(550, 350);
+		createUnit(UnitName::SCV);
+		createUnit(UnitName::SCV);
+		createUnit(UnitName::SCV);
+		createUnit(UnitName::SCV);
+		units[12]->setPosition(50, 400);
+		units[13]->setPosition(75, 550);
+		units[14]->setPosition(375, 75);
+		units[15]->setPosition(125, 300);
 
 		createResource(500);
 		resources[0]->setPosition(300, 500);
