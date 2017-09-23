@@ -11,6 +11,14 @@
 #include "Structure.h"
 #include "Command.h"
 
+enum UnitName;
+class Unit;
+class Point;
+class Command;
+class AttackCommand;
+class GatherCommand;
+class MoveCommand;
+
 class Controller {
 private:
 	std::vector<Unit*> units;

@@ -17,12 +17,7 @@ private:
 public:
 
 	//constructor
-	Resource(int maxAmount)
-		: maxAmount(maxAmount), currentAmount(maxAmount), type(ResourceType::Blue) {
-		shape.setRadius(24);
-		shape.setFillColor(sf::Color::Blue);
-	}
-
+	Resource(int);
 	//Getters
 	const int getMaxAmount() { return maxAmount; }
 	const int getCurrentAmount() { return currentAmount; }

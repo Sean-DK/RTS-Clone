@@ -1,28 +1,12 @@
 #pragma once
 
 #include "Unit.h"
+#include "Point.h"
 #include "Resource.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-//idk why this needs to be here but it doesn't work without it
 class Unit;
-
-class Point {
-public:
-	float x;
-	float y;
-
-	Point(float x, float y)
-		: x(x), y(y) {}
-
-	Point() {}
-	Point* operator=(Point point) {
-		this->x = point.x;
-		this->y = point.y;
-		return this;
-	}
-};
 
 enum CommandType {
 	Move,
@@ -36,16 +20,14 @@ public:
 	bool completed;
 	sf::RectangleShape shape;
 
-	Command(CommandType type)
-		: type(type), completed(false) {}
+	Command(CommandType);
 };
 
 class AttackCommand : public Command {
 public:
 	Unit* target;
 
-	AttackCommand(Unit* u)
-		: Command(CommandType::Attack), target(u) {}
+	AttackCommand(Unit*);
 };
 
 class GatherCommand : public Command {
@@ -53,16 +35,12 @@ public:
 	Resource* target;
 	Point* endPoint;
 
-	GatherCommand(Resource* r)
-		: Command(CommandType::Gather), target(r) {
-		endPoint = new Point(0, 0);
-	}
+	GatherCommand(Resource*);
 };
 
 class MoveCommand : public Command {
 public:
 	Point* endPoint;
 
-	MoveCommand(Point* p)
-		: Command(CommandType::Move), endPoint(p) {}
+	MoveCommand(Point*);
 };
