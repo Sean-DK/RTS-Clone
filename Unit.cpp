@@ -133,30 +133,30 @@ void Unit::move(MoveCommand* command) {
 	}
 	else {
 		//move x
-		if (shape.getPosition().x > command->endPoint->x) {
+		if (shape.getPosition().x > command->endPoint.x) {
 			setPosition(shape.getPosition().x - speed, shape.getPosition().y);
 		}
-		else if (shape.getPosition().x < command->endPoint->x) {
+		else if (shape.getPosition().x < command->endPoint.x) {
 			setPosition(shape.getPosition().x + speed, shape.getPosition().y);
 		}
 		//move y
-		if (shape.getPosition().y > command->endPoint->y) {
+		if (shape.getPosition().y > command->endPoint.y) {
 			setPosition(shape.getPosition().x, shape.getPosition().y - speed);
 		}
-		else if (shape.getPosition().y < command->endPoint->y) {
+		else if (shape.getPosition().y < command->endPoint.y) {
 			setPosition(shape.getPosition().x, shape.getPosition().y + speed);
 		}
 		//complete
-		if (shape.getPosition().x == command->endPoint->x
-			&& shape.getPosition().y == command->endPoint->y) {
+		if (shape.getPosition().x == command->endPoint.x
+			&& shape.getPosition().y == command->endPoint.y) {
 			commandQueue.front()->completed = true;
 		}
 	}
 	//check for collisions with other units
 	//TODO: change path rather than terminate command
-	for (int i = 0; i < controller->getUnitSize(); i++) {
+	/*for (int i = 0; i < controller->getUnitSize(); i++) {
 		if (shape.getGlobalBounds().intersects(controller->getUnits()[i]->getShape()->getGlobalBounds())) {
 			commandQueue.front()->completed = true;
 		}
-	}
+	}*/
 }

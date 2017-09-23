@@ -55,10 +55,10 @@ public:
 	void manageControlGroup(int);
 
 	//Input Event Handling
-	void leftMousePress(Point*);
-	void rightMousePress(Point*);
-	void leftMouseRelease(Point*);
-	void rightMouseRelease(Point*);
+	void leftMousePress(Point);
+	void rightMousePress(Point);
+	void leftMouseRelease(Point);
+	void rightMouseRelease(Point);
 	void mouseDrag(Point*, sf::Event);
 	void keyPress(sf::Keyboard::Key);
 	void keyRelease(sf::Keyboard::Key);

@@ -14,5 +14,5 @@ GatherCommand::GatherCommand(Resource* r)
 	endPoint = new Point(0, 0);
 }
 
-MoveCommand::MoveCommand(Point* p)
+MoveCommand::MoveCommand(Point p)
 	: Command(CommandType::Move), endPoint(p) {}

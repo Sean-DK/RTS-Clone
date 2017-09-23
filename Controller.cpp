@@ -64,10 +64,10 @@ void Controller::manageControlGroup(int n) {
 	}
 }
 
-void Controller::leftMousePress(Point* mousePos) {}
-void Controller::rightMousePress(Point* mousePos) {}
+void Controller::leftMousePress(Point mousePos) {}
+void Controller::rightMousePress(Point mousePos) {}
 
-void Controller::leftMouseRelease(Point* mousePos) {
+void Controller::leftMouseRelease(Point mousePos) {
 	//if there is a box
 	if (box->getSize() != sf::Vector2f(0, 0)) {
 		//check all units
@@ -109,7 +109,7 @@ void Controller::leftMouseRelease(Point* mousePos) {
 		//TODO: set up "loaded units" that only handles units on screen
 		for (int i = 0; i < units.size(); i++) {
 			//if the unit was clicked
-			if (units[i]->getShape()->getGlobalBounds().contains(mousePos->x, mousePos->y)) {
+			if (units[i]->getShape()->getGlobalBounds().contains(mousePos.x, mousePos.y)) {
 				//if shift is NOT held down
 				if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
 					//if the unit is NOT selected
@@ -148,7 +148,7 @@ void Controller::leftMouseRelease(Point* mousePos) {
 	}
 }
 
-void Controller::rightMouseRelease(Point* mousePos) {
+void Controller::rightMouseRelease(Point mousePos) {
 	//check all units
 	//TODO: set up "loaded units" that only handles units on screen
 	for (int i = 0; i < units.size(); i++) {
@@ -157,7 +157,7 @@ void Controller::rightMouseRelease(Point* mousePos) {
 		//if a unit is right clicked then use list of "selected units" and
 		//set the "target" to the clicked unit and pass the attack command
 		//to all units in the "selected units" list
-		if (units[i]->getShape()->getGlobalBounds().contains(mousePos->x, mousePos->y)) {
+		if (units[i]->getShape()->getGlobalBounds().contains(mousePos.x, mousePos.y)) {
 			//if shift is NOT held down
 			if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
 				//if the unit is NOT selected
@@ -186,7 +186,7 @@ void Controller::rightMouseRelease(Point* mousePos) {
 			//check to see if a resource was clicked
 			for (int j = 0; j < resources.size(); j++) {
 				//if the node was clicked
-				if (resources[j]->getShape()->getGlobalBounds().contains(mousePos->x, mousePos->y)) {
+				if (resources[j]->getShape()->getGlobalBounds().contains(mousePos.x, mousePos.y)) {
 					//check for selected units
 					for (int k = 0; k < units.size(); k++) {
 						//if the unit is NOT selected
@@ -316,10 +316,10 @@ void Controller::eventHandler(sf::Event e, sf::RenderWindow* w) {
 		//switch based on which key was pressed
 		switch (e.key.code) {
 		case sf::Mouse::Left:
-			leftMousePress(&mousePos);
+			leftMousePress(mousePos);
 			break;
 		case sf::Mouse::Right:
-			rightMousePress(&mousePos);
+			rightMousePress(mousePos);
 			break;
 		}
 	}
@@ -330,10 +330,10 @@ void Controller::eventHandler(sf::Event e, sf::RenderWindow* w) {
 		//switch based on which key was pressed
 		switch (e.key.code) {
 		case sf::Mouse::Left:
-			leftMouseRelease(&mousePos);
+			leftMouseRelease(mousePos);
 			break;
 		case sf::Mouse::Right:
-			rightMouseRelease(&mousePos);
+			rightMouseRelease(mousePos);
 			break;
 		}
 	}

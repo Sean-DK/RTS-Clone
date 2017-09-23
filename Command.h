@@ -40,7 +40,7 @@ public:
 
 class MoveCommand : public Command {
 public:
-	Point* endPoint;
+	Point endPoint;
 
-	MoveCommand(Point*);
+	MoveCommand(Point);
 };
