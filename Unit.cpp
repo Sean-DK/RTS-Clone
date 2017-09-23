@@ -3,8 +3,8 @@
 #include "stdafx.h"
 #include "Unit.h"
 
-Unit::Unit(UnitName n, int id)
-	: name(n), unitID(id) {
+Unit::Unit(UnitName n, int id, Controller* c)
+	: name(n), unitID(id), controller(c) {
 	switch (this->name) {
 	case UnitName::Marine:
 		type = UnitType::Army;
@@ -32,6 +32,12 @@ Unit::Unit(UnitName n, int id)
 		shape.setSize(sf::Vector2f(32, 32));
 		break;
 	}
+}
+
+//Overloads
+bool Unit::operator==(Unit* u) {
+	if (this->unitID == u->unitID) return true;
+	else return false;
 }
 
 void Unit::select() {
@@ -151,12 +157,16 @@ void Unit::move(MoveCommand* command) {
 			&& shape.getPosition().y == command->endPoint.y) {
 			commandQueue.front()->completed = true;
 		}
-	}
-	//check for collisions with other units
-	//TODO: change path rather than terminate command
-	/*for (int i = 0; i < controller->getUnitSize(); i++) {
-		if (shape.getGlobalBounds().intersects(controller->getUnits()[i]->getShape()->getGlobalBounds())) {
-			commandQueue.front()->completed = true;
+		else {
+			//check for collisions with other units
+			//TODO: change path rather than terminate command
+			for (int i = 0; i < controller->getUnitSize(); i++) {
+				if (this != controller->getUnits()[i]) {
+					if (shape.getGlobalBounds().intersects(controller->getUnits()[i]->getShape()->getGlobalBounds())) {
+						commandQueue.front()->completed = true;
+					}
+				}
+			}
 		}
-	}*/
+	}
 }

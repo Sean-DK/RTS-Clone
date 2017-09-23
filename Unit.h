@@ -41,7 +41,11 @@ private:
 public:
 	//constructor
 	Unit() {}
-	Unit(UnitName, int);
+	Unit(UnitName, int, Controller*);
+
+	//Overloads
+	bool operator==(Unit*);
+
 	//Getters
 	//TODO: delete any unused when done working
 	const sf::RectangleShape* getShape() { return &shape; }

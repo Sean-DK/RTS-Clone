@@ -21,7 +21,7 @@ void Controller::draw(sf::RenderWindow* w) {
 }
 
 void Controller::createUnit(UnitName n) {
-	Unit* newUnit = new Unit(n, currentID++);
+	Unit* newUnit = new Unit(n, currentID++, this);
 	units.push_back(newUnit);
 }
 
