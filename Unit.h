@@ -8,14 +8,17 @@
 
 #include <iostream>
 
+//Forward declarations
 class Controller;
 class Point;
 
+//UnitType
 enum UnitType {
 	Worker,
 	Army
 };
 
+//UnitName
 enum UnitName {
 	SCV,
 	Marine,
@@ -23,6 +26,7 @@ enum UnitName {
 	Tank,
 };
 
+//Unit
 //TODO: do inheritance for unit types
 class Unit {
 private:
@@ -39,14 +43,14 @@ private:
 	std::vector<Command*> commandQueue;
 
 public:
-	//constructor
+	//Constructors
 	Unit() {}
 	Unit(UnitName, int, Controller*);
 
 	//Overloads
 	bool operator==(Unit*);
 
-	//Getters
+	//Accessors
 	//TODO: delete any unused when done working
 	const sf::RectangleShape* getShape() { return &shape; }
 	const UnitType getType() { return type; }
@@ -60,7 +64,7 @@ public:
 	const Command* getCommand(int i) { return commandQueue[i]; }
 	const bool commandEmpty() { return commandQueue.empty(); }
 
-	//Setters
+	//Mutators
 	void setPosition(Point* p) { shape.setPosition(p->x, p->y); }
 	void setPosition(float x, float y) { shape.setPosition(x, y); }
 	void setHealth(int h) { currentHealth = h; }

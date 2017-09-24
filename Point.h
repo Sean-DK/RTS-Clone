@@ -1,5 +1,6 @@
 #pragma once
 
+//Point
 class Point {
 public:
 	float x;

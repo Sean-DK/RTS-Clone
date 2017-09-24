@@ -1,3 +1,5 @@
+//TODO: make member variables private and add accessors
+
 #pragma once
 
 #include "Unit.h"
@@ -6,14 +8,17 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
+//Forward declarations
 class Unit;
 
+//CommandType
 enum CommandType {
 	Move,
 	Attack,
 	Gather
 };
 
+//Command
 class Command {
 public:
 	CommandType type;
@@ -23,6 +28,7 @@ public:
 	Command(CommandType);
 };
 
+//AttackCommand
 class AttackCommand : public Command {
 public:
 	Unit* target;
@@ -30,6 +36,7 @@ public:
 	AttackCommand(Unit*);
 };
 
+//GatherCommand
 class GatherCommand : public Command {
 public:
 	Resource* target;
@@ -38,6 +45,7 @@ public:
 	GatherCommand(Resource*);
 };
 
+//MoveCommand
 class MoveCommand : public Command {
 public:
 	Point endPoint;

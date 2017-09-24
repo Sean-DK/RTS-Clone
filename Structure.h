@@ -2,15 +2,17 @@
 
 #include "StructureCommand.h"
 
-//idk why this needs to be here but it doesn't work without it
+//Forward declaration
 class Controller;
 
+//StructureType
 enum StructureType {
 	Base,
 	Barracks,
 	Factory
 };
 
+//Structure
 class Structure {
 private:
 	StructureType type;
@@ -19,5 +21,6 @@ private:
 	Controller* controller;
 
 public:
+	//Accesors
 	const sf::CircleShape* getShape() { return &shape; }
 };

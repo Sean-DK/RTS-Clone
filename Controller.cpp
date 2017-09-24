@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "Controller.h"
 
+//Execute command, wrapper for Unit.execute()
 void Controller::executeCommand() {
 		//Unit Commands
 		for (int i = 0; i < units.size(); i++) {
@@ -11,6 +12,7 @@ void Controller::executeCommand() {
 		//TODO: structure commands
 }
 
+//Draw objects, this is a wrapper for sf::Window::draw
 void Controller::draw(sf::RenderWindow* w) {
 	w->clear();
 	for (int i = 0; i < resources.size(); w->draw(*resources[i++]->getShape()));
@@ -20,18 +22,23 @@ void Controller::draw(sf::RenderWindow* w) {
 	w->display();
 }
 
+//Create unit
 void Controller::createUnit(UnitName n) {
 	Unit* newUnit = new Unit(n, currentID++, this);
 	units.push_back(newUnit);
 }
 
+//Create resources
 void Controller::createResource(int a) {
 	Resource* newResource = new Resource(a);
 	resources.push_back(newResource);
 }
 
+//Create structure
+//TODO: finish structures
 void Controller::createStructure() {}
 
+//Manage control groups
 void Controller::manageControlGroup(int n) {
 	//if shift is NOT held
 	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
@@ -64,9 +71,14 @@ void Controller::manageControlGroup(int n) {
 	}
 }
 
+//Input event handling
+//Left mouse press
 void Controller::leftMousePress(Point mousePos) {}
+
+//Right mouse press
 void Controller::rightMousePress(Point mousePos) {}
 
+//Left mouse release
 void Controller::leftMouseRelease(Point mousePos) {
 	//if there is a box
 	if (box->getSize() != sf::Vector2f(0, 0)) {
@@ -159,6 +171,7 @@ void Controller::leftMouseRelease(Point mousePos) {
 	}
 }
 
+//Right mouse release
 void Controller::rightMouseRelease(Point mousePos) {
 	//check all units
 	//TODO: set up "loaded units" that only handles units on screen
@@ -269,6 +282,7 @@ void Controller::rightMouseRelease(Point mousePos) {
 	}
 }
 
+//Mouse drag
 void Controller::mouseDrag(Point* mousePos, sf::Event e) {
 	Point* currentPos = new Point(e.mouseMove.x - mousePos->x, e.mouseMove.y - mousePos->y);
 	box->setSize(sf::Vector2f(currentPos->x, currentPos->y));
@@ -278,7 +292,7 @@ void Controller::mouseDrag(Point* mousePos, sf::Event e) {
 	box->setFillColor(sf::Color::Transparent);
 }
 
-
+//Keyboard key press
 void Controller::keyPress(sf::Keyboard::Key k) {
 	switch (k) {
 	case (sf::Keyboard::Num1):
@@ -314,6 +328,7 @@ void Controller::keyPress(sf::Keyboard::Key k) {
 	}
 }
 
+//Keyboard key release
 void Controller::keyRelease(sf::Keyboard::Key k) {}
 
 //Event Handler

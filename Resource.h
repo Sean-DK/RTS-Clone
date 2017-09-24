@@ -3,10 +3,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
+//ResourceType
 enum ResourceType {
 	Blue,
 };
 
+//Resource
 class Resource {
 private:
 	int maxAmount;
@@ -16,15 +18,16 @@ private:
 
 public:
 
-	//constructor
+	//Constructor
 	Resource(int);
-	//Getters
+	
+	//Accessors
 	const int getMaxAmount() { return maxAmount; }
 	const int getCurrentAmount() { return currentAmount; }
 	const sf::CircleShape* getShape() { return &shape; }
 	const ResourceType getType() { return type; }
 
-	//Setters
+	//Mutators
 	void setPosition(int x, int y) { shape.setPosition(x, y); }
 	void setAmount(int x) { currentAmount = x; }
 };

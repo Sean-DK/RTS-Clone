@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "Unit.h"
 
+//Unit Constructor
 Unit::Unit(UnitName n, int id, Controller* c)
 	: name(n), unitID(id), controller(c) {
 	switch (this->name) {
@@ -40,22 +41,23 @@ bool Unit::operator==(Unit* u) {
 	else return false;
 }
 
+//Select
 void Unit::select() {
 	if (!selected) {
-		std::cout << "s\n";
 		selected = true;
 		shape.setFillColor(sf::Color::Red);
 	}
 }
 
+//Deselect
 void Unit::deselect() {
 	if (selected) {
-		std::cout << "d\n";
 		selected = false;
 		shape.setFillColor(sf::Color::White);
 	}
 }
 
+//Set command, overwrites any old commands
 void Unit::setCommand(Command* c) {
 	if (commandQueue.empty()) { commandQueue.push_back(c); }
 	else {
@@ -81,8 +83,12 @@ void Unit::executeCommand() {
 	}
 }
 
+//Attack, executes an attack command
 void Unit::attack(AttackCommand* command) {}
 
+//Gather, executes a gather command
+//TODO: fix pathing and timing
+//TODO: when giving "Gather" command and holding shift the unit walks offscreen and is lost
 void Unit::gather(GatherCommand* command) {
 	//Check for completion
 	if (commandQueue.front()->completed) {
@@ -134,6 +140,8 @@ void Unit::gather(GatherCommand* command) {
 	}
 }
 
+//Move, executes a move command
+//TODO: fix pathing
 void Unit::move(MoveCommand* command) {
 	//check for completed command
 	if (commandQueue.front()->completed) {

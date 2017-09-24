@@ -11,6 +11,7 @@
 #include "Structure.h"
 #include "Command.h"
 
+//Forward declarations
 enum UnitName;
 class Unit;
 class Point;
@@ -19,6 +20,7 @@ class AttackCommand;
 class GatherCommand;
 class MoveCommand;
 
+//Controller
 class Controller {
 private:
 	std::vector<Unit*> units;
@@ -29,32 +31,33 @@ private:
 	int currentID = 0;
 
 public:
-	//Getters
+	//Accessors
 	int getUnitSize() { return units.size(); }
 	int getResourceSize() { return resources.size(); }
 	int getStructureSize() { return structures.size(); }
 	std::vector<Unit*> getUnits() { return units; }
 
-	//Execute Commands
+
+	//Execute command, wrapper for Unit.execute()
 	void executeCommand();
 
-	//Draw Objects
+	//Draw objects, this is a wrapper for sf::Window::draw
 	void draw(sf::RenderWindow*);
 
-	//Create Unit
+	//Create unit
 	void createUnit(UnitName);
 
-	//Create Resource
+	//Create resource
 	void createResource(int);
 
-	//Create Structure
+	//Create structure
 	//TODO: finish structure
 	void createStructure();
 	
-	//Add Control Group
+	//Manage control groups
 	void manageControlGroup(int);
 
-	//Input Event Handling
+	//Input event handling
 	void leftMousePress(Point);
 	void rightMousePress(Point);
 	void leftMouseRelease(Point);
@@ -63,10 +66,10 @@ public:
 	void keyPress(sf::Keyboard::Key);
 	void keyRelease(sf::Keyboard::Key);
 
-	//Event Handler
-	//TODO: use switch here
+	//Event handler, merely calls the above functions
+	//TODO: use switch here, maybe??
 	void eventHandler(sf::Event, sf::RenderWindow*);
 
-	//Initialize
+	//Initialize, does required actions at start-up
 	void initialize();
 };
