@@ -4,24 +4,28 @@
 
 int main()
 {
+	//Create render window
 	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(768, 640), "Window");
+	//Set frame limit, THIS AFFECTS HOW FAST UNITS MOVE WITH Unit.speed
 	window->setFramerateLimit(60);
 
-	//Controller
+	//Create controller, this does everything
 	Controller* controller = new Controller();
+	//Initialize, move this to the constructor of Controller so it happens automatically
 	controller->initialize();
 
 	while (window->isOpen())
 	{
+		//Poll for events
 		sf::Event event;
 		while (window->pollEvent(event)) {
 			controller->eventHandler(event, window);
 		}
 
-		//execute commands
+		//Execute commands
 		controller->executeCommand();
 
-		//draw
+		//Draw
 		controller->draw(window);	
 	}
 
