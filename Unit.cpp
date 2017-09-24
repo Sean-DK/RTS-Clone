@@ -42,6 +42,7 @@ bool Unit::operator==(Unit* u) {
 
 void Unit::select() {
 	if (!selected) {
+		std::cout << "s\n";
 		selected = true;
 		shape.setFillColor(sf::Color::Red);
 	}
@@ -49,6 +50,7 @@ void Unit::select() {
 
 void Unit::deselect() {
 	if (selected) {
+		std::cout << "d\n";
 		selected = false;
 		shape.setFillColor(sf::Color::White);
 	}

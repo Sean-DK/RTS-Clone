@@ -108,10 +108,22 @@ void Controller::leftMouseRelease(Point mousePos) {
 		//check all units
 		//TODO: set up "loaded units" that only handles units on screen
 		for (int i = 0; i < units.size(); i++) {
-			//if the unit was clicked
-			if (units[i]->getShape()->getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-				//if shift is NOT held down
+			//if the unit was NOT clicked
+			if (!units[i]->getShape()->getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				//if shift is NOT held
 				if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+					units[i]->deselect();
+				}
+				//if shift is held
+				else {
+					//do nothing
+				}
+			}
+			//if the unit was clicked
+			else {
+				//if shift and control are NOT held down
+				if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)
+					&& !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 					//if the unit is NOT selected
 					if (!units[i]->isSelected()) {
 						units[i]->select();
@@ -122,7 +134,7 @@ void Controller::leftMouseRelease(Point mousePos) {
 					}
 				}
 				//if shift is held down
-				else {
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
 					//if the unit is NOT selected {
 					if (!units[i]->isSelected()) {
 						units[i]->select();
@@ -132,16 +144,15 @@ void Controller::leftMouseRelease(Point mousePos) {
 						units[i]->deselect();
 					}
 				}
-			}
-			//if the unit was NOT clicked
-			else {
-				//if shift is NOT held
-				if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-					units[i]->deselect();
-				}
-				//if shift is held
-				else {
-					//do nothing
+				//if control is held down
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+					//select all units of same type
+					for (int j = 0; j < units.size(); j++) {
+						if (units[i]->getType() == units[j]->getType()) {
+							units[j]->select();
+						}
+					}
+					break;
 				}
 			}
 		}
