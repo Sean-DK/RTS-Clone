@@ -13,9 +13,10 @@ class Unit;
 
 //CommandType
 enum CommandType {
-	Move,
 	Attack,
-	Gather
+	Gather,
+	Move,
+	Patrol,
 };
 
 //Command
@@ -51,4 +52,13 @@ public:
 	Point endPoint;
 
 	MoveCommand(Point);
+};
+
+//PatrolCommand
+class PatrolCommand : public Command {
+public:
+	Point startPoint;
+	Point endPoint;
+
+	PatrolCommand(Point, Point);
 };

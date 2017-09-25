@@ -87,4 +87,8 @@ public:
 	//Move command
 	//TODO: fix pathing
 	void move(MoveCommand*);
+
+	//Patrol command
+	//TODO: fix pathing
+	void patrol(PatrolCommand*);
 };

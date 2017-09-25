@@ -17,6 +17,10 @@ GatherCommand::GatherCommand(Resource* r)
 	endPoint = new Point(0, 0);
 }
 
-//MoveComand Constructor
+//MoveCommand Constructor
 MoveCommand::MoveCommand(Point p)
 	: Command(CommandType::Move), endPoint(p) {}
+
+//PatrolCommand Constructor
+PatrolCommand::PatrolCommand(Point a, Point b) 
+	: Command(CommandType::Patrol), startPoint(a), endPoint(b) {}

@@ -10,6 +10,7 @@
 #include "Resource.h"
 #include "Structure.h"
 #include "Command.h"
+#include "Cursor.h"
 
 //Forward declarations
 enum UnitName;
@@ -19,10 +20,13 @@ class Command;
 class AttackCommand;
 class GatherCommand;
 class MoveCommand;
+class PatrolCommand;
+class Cursor;
 
 //Controller
 class Controller {
 private:
+	Cursor cursor;
 	std::vector<Unit*> units;
 	std::vector<Resource*> resources;
 	std::vector<Structure*> structures;

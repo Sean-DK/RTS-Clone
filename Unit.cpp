@@ -79,6 +79,9 @@ void Unit::executeCommand() {
 		case CommandType::Move:
 			move(static_cast<MoveCommand*>(commandQueue.front()));
 			break;
+		case CommandType::Patrol:
+			patrol(static_cast<PatrolCommand*>(commandQueue.front()));
+			break;
 		}
 	}
 }
@@ -146,6 +149,55 @@ void Unit::move(MoveCommand* command) {
 	//check for completed command
 	if (commandQueue.front()->completed) {
 		commandQueue.erase(commandQueue.begin());
+	}
+	else {
+		//move x
+		if (shape.getPosition().x > command->endPoint.x) {
+			setPosition(shape.getPosition().x - speed, shape.getPosition().y);
+		}
+		else if (shape.getPosition().x < command->endPoint.x) {
+			setPosition(shape.getPosition().x + speed, shape.getPosition().y);
+		}
+		//move y
+		if (shape.getPosition().y > command->endPoint.y) {
+			setPosition(shape.getPosition().x, shape.getPosition().y - speed);
+		}
+		else if (shape.getPosition().y < command->endPoint.y) {
+			setPosition(shape.getPosition().x, shape.getPosition().y + speed);
+		}
+		//complete
+		if (shape.getPosition().x == command->endPoint.x
+			&& shape.getPosition().y == command->endPoint.y) {
+			commandQueue.front()->completed = true;
+		}
+		else {
+			//check for collisions with other units
+			//TODO: change path rather than terminate command
+			for (int i = 0; i < controller->getUnitSize(); i++) {
+				if (this != controller->getUnits()[i]) {
+					if (shape.getGlobalBounds().intersects(controller->getUnits()[i]->getShape()->getGlobalBounds())) {
+						commandQueue.front()->completed = true;
+					}
+				}
+			}
+		}
+	}
+}
+
+void Unit::patrol(PatrolCommand* command) {
+	//check for completed command
+	if (commandQueue.front()->completed) {
+		//if there is a command waiting, stop patrolling 
+		if (commandQueue.size() > 1) {
+			commandQueue.erase(commandQueue.begin());
+		}
+		//otherwise continue patrolling
+		else {
+			Point temp = command->startPoint;
+			command->startPoint = command->endPoint;
+			command->endPoint = temp;
+			command->completed = false;
+		}
 	}
 	else {
 		//move x
