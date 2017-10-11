@@ -377,6 +377,9 @@ void Controller::keyRelease(sf::Keyboard::Key k) {}
 //TODO: use switch here
 void Controller::eventHandler(sf::Event e, sf::RenderWindow* w) {
 	static Point mousePos(0, 0);
+	if (e.type == sf::Event::Resized) {
+		w->setView(sf::View(sf::FloatRect(0, 0, e.size.width, e.size.height)));
+	}
 	if (e.type == sf::Event::MouseButtonPressed) {
 		//grab mouse position
 		mousePos.x = sf::Mouse::getPosition(*w).x;
