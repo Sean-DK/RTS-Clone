@@ -89,6 +89,9 @@ void Unit::executeCommand() {
 //Attack, executes an attack command
 void Unit::attack(AttackCommand* command) {}
 
+//Build, executes a build command
+void Unit::build(BuildCommand* command) {}
+
 //Gather, executes a gather command
 //TODO: fix pathing and timing
 //TODO: when giving "Gather" command and holding shift the unit walks offscreen and is lost

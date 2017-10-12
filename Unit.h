@@ -11,6 +11,7 @@
 //Forward declarations
 class Controller;
 class Point;
+class BuildCommand;
 
 //UnitType
 enum UnitType {
@@ -78,6 +79,9 @@ public:
 
 	//Attack command
 	void attack(AttackCommand*);
+
+	//Build command
+	void build(BuildCommand*);
 
 	//Gather command
 	//TODO: fix pathing and timing

@@ -11,6 +11,10 @@ Command::Command(CommandType type)
 AttackCommand::AttackCommand(Unit* u)
 	: Command(CommandType::Attack), target(u) {}
 
+//BuildCommand Constructor
+BuildCommand::BuildCommand(StructureType s, Point p)
+	: Command(CommandType::Build), structType(s), dest(p) {}
+
 //GatherCommand Constructor
 GatherCommand::GatherCommand(Resource* r)
 	: Command(CommandType::Gather), target(r) {

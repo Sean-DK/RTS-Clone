@@ -1,19 +1,21 @@
 //TODO: make member variables private and add accessors
 
 #pragma once
-
 #include "Unit.h"
 #include "Point.h"
 #include "Resource.h"
+#include "Structure.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
 //Forward declarations
 class Unit;
+enum StructureType;
 
 //CommandType
 enum CommandType {
 	Attack,
+	Build,
 	Gather,
 	Move,
 	Patrol,
@@ -35,6 +37,15 @@ public:
 	Unit* target;
 
 	AttackCommand(Unit*);
+};
+
+//BuildCommand
+class BuildCommand : public Command {
+public:
+	StructureType structType;
+	Point dest;
+
+	BuildCommand(StructureType, Point);
 };
 
 //GatherCommand

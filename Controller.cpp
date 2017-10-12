@@ -84,6 +84,63 @@ void Controller::leftMouseRelease(Point mousePos) {
 	case (CursorState::A):
 		//Attack stuff
 		break;
+	case (CursorState::B):
+		//not sure what to put here
+		break;
+	case (CursorState::BB):
+		//check for selected units
+		for (int i = 0; i < units.size(); i++) {
+			//if the unit is a worker AND is selected
+			if (units[i]->getType() == UnitType::Worker && units[i]->isSelected()) {
+				//if shift is NOT held
+				if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+					//replace current command with new one
+					BuildCommand* buildCommand = new BuildCommand(StructureType::Barracks, mousePos);
+					//if there are no commands, push new command
+					if (units[i]->commandEmpty()) {
+						units[i]->addCommand(buildCommand);
+					}
+					//if there is a command, clear queue and push new command
+					else {
+						units[i]->setCommand(buildCommand);
+					}
+				}
+				//if shift is held
+				else {
+					//add new move command to command queue
+					BuildCommand* buildCommand = new BuildCommand(StructureType::Barracks, mousePos);
+					units[i]->addCommand(buildCommand);
+				}
+			}
+		}
+		break;
+	case (CursorState::BF):
+		//check for selected units
+		for (int i = 0; i < units.size(); i++) {
+			//if the unit is a worker AND is selected
+			if (units[i]->getType() == UnitType::Worker && units[i]->isSelected()) {
+				//if shift is NOT held
+				if (!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+					//replace current command with new one
+					BuildCommand* buildCommand = new BuildCommand(StructureType::Factory, mousePos);
+					//if there are no commands, push new command
+					if (units[i]->commandEmpty()) {
+						units[i]->addCommand(buildCommand);
+					}
+					//if there is a command, clear queue and push new command
+					else {
+						units[i]->setCommand(buildCommand);
+					}
+				}
+				//if shift is held
+				else {
+					//add new move command to command queue
+					BuildCommand* buildCommand = new BuildCommand(StructureType::Factory, mousePos);
+					units[i]->addCommand(buildCommand);
+				}
+			}
+		}
+		break;
 	case (CursorState::N):
 		//if there is a box
 		if (box->getSize() != sf::Vector2f(0, 0)) {
@@ -200,8 +257,8 @@ void Controller::leftMouseRelease(Point mousePos) {
 				//if shift is held
 				else {
 					//add new move command to command queue
-					PatrolCommand* gatherCommand = new PatrolCommand(units[i]->getShape()->getPosition(), mousePos);
-					units[i]->addCommand(gatherCommand);
+					PatrolCommand* patrolCommand = new PatrolCommand(units[i]->getShape()->getPosition(), mousePos);
+					units[i]->addCommand(patrolCommand);
 				}
 			}
 		}
@@ -366,6 +423,29 @@ void Controller::keyPress(sf::Keyboard::Key k) {
 		break;
 	case (sf::Keyboard::P):
 		cursor.setState(CursorState::P);
+		break;
+	case (sf::Keyboard::B):
+		switch (cursor.getState()) {
+		case (CursorState::A):
+			//TODO: possibly change functionality
+			cursor.setState(CursorState::B);
+			break;
+		case (CursorState::B):
+			cursor.setState(CursorState::BB);
+			break;
+		case (CursorState::N):
+			cursor.setState(CursorState::B);
+			break;
+		case (CursorState::P):
+			//TODO: possibly change functionality
+			cursor.setState(CursorState::B);
+			break;
+		}
+		break;
+	case (sf::Keyboard::F):
+		if (cursor.getState() == CursorState::B) {
+			cursor.setState(CursorState::BF);
+		}
 		break;
 	}
 }

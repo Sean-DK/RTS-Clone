@@ -22,6 +22,7 @@ class GatherCommand;
 class MoveCommand;
 class PatrolCommand;
 class Cursor;
+class Structure;
 
 //Controller
 class Controller {
